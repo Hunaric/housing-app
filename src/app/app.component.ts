@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './body/navbar/navbar.component';
 import { PagesComponent } from './part/pages/pages.component';
 
@@ -7,7 +7,7 @@ import { PagesComponent } from './part/pages/pages.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, PagesComponent],
+  imports: [RouterOutlet, NavbarComponent, PagesComponent, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
