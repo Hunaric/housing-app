@@ -9,8 +9,8 @@ import { Component } from '@angular/core';
   styleUrl: './user-nav.component.css'
 })
 export class UserNavComponent {
-  isOpen: boolean = true;
-  userId: string | null = '123';
+  isOpen: boolean = false;
+  userId: string | null = '';
 
   toogleIsOpen() {
     this.isOpen = !this.isOpen;

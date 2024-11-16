@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Type } from '@angular/core';
 import { ModalService } from '../../service/modal.service';
 import { CommonModule } from '@angular/common';
 
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ModalComponent {
   isOpen = false;
-  content: any = null;
+  content: Type<any> | null = null;
   label: string = '';
 
   constructor(private modalService: ModalService) {
@@ -29,4 +29,7 @@ export class ModalComponent {
   }
 
 
+  openModal(label: string = 'My Title', content: any = `<p>Hello World</p>`) {
+    this.modalService.open(label, content);
+  }
 } 

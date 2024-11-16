@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -8,7 +8,7 @@ export class ModalService {
 
   constructor() { }
 
-  private modalState = new BehaviorSubject<{ isOpen: boolean, content: any, label: string }>({
+  private modalState = new BehaviorSubject<{ isOpen: boolean, content: Type<any> | null, label: string }>({
     isOpen: false,
     content: null,
     label: '',
