@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ModalService } from '../../service/modal.service';
+import { LoginModalComponent } from '../../part/modal-content/login-modal/login-modal.component';
+import { SignupModalComponent } from '../../part/modal-content/signup-modal/signup-modal.component';
 
 @Component({
   selector: 'app-user-nav',
@@ -9,10 +12,21 @@ import { Component } from '@angular/core';
   styleUrl: './user-nav.component.css'
 })
 export class UserNavComponent {
-  isOpen: boolean = false;
+  userNavIsOpen: boolean = false;
   userId: string | null = '';
 
-  toogleIsOpen() {
-    this.isOpen = !this.isOpen;
+  toogleUserNavIsOpen() {
+    this.userNavIsOpen = !this.userNavIsOpen;
   }
+
+  constructor(private modalService: ModalService) {}
+
+  openLoginModal() { 
+    this.modalService.open('Log in', LoginModalComponent);  // Passez le composant ici
+  }
+  
+  openSignupModal() { 
+    this.modalService.open('Sign up', SignupModalComponent);  // Passez le composant ici
+  }
+  
 }

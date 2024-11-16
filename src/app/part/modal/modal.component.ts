@@ -7,29 +7,22 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css'
+  styleUrls: ['./modal.component.css']
 })
 export class ModalComponent {
   isOpen = false;
-  content: Type<any> | null = null;
+  content: Type<any> | null = null; // Change this to Type<any>
   label: string = '';
 
   constructor(private modalService: ModalService) {
     this.modalService.modalState$.subscribe((state) => {
       this.isOpen = state.isOpen;
-      this.content = state.content;
+      this.content = state.content; // This will now be a component type
       this.label = state.label;
     });
   }
 
   closeModal() {
-    console.log('Closing Modal');
-    
     this.modalService.close();
   }
-
-
-  openModal(label: string = 'My Title', content: any = `<p>Hello World</p>`) {
-    this.modalService.open(label, content);
-  }
-} 
+}

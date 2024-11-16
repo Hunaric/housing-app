@@ -1,5 +1,5 @@
 <div class="p-2 relative inline-block border rounded-full">
-  <button class="flex items-center" (click)="toogleIsOpen()">
+  <button class="flex items-center" (click)="toogleUserNavIsOpen()">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -31,7 +31,7 @@
   </button>
 
   <div
-    *ngIf="isOpen"
+    *ngIf="userNavIsOpen"
     class="w-[220px] absolute top-[60px] right-0 bg-white border rounded-xl shadow-md flex flex-col cursor-pointer"
   >
     <ng-container *ngIf="userId; else guestLinks">
@@ -44,10 +44,10 @@
     </ng-container>
 
     <ng-template #guestLinks>
-      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition">
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="openLoginModal()">
         Log in
       </div>
-      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition">
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="openSignupModal()">
         Sign up
       </div>
     </ng-template>

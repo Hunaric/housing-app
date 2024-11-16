@@ -6,8 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ModalService {
 
-  constructor() { }
-
   private modalState = new BehaviorSubject<{ isOpen: boolean, content: Type<any> | null, label: string }>({
     isOpen: false,
     content: null,
@@ -16,7 +14,7 @@ export class ModalService {
 
   modalState$ = this.modalState.asObservable();
 
-  open(label: string, content: any) {
+  open(label: string, content: Type<any>) {
     this.modalState.next({ isOpen: true, content, label });
   }
 
