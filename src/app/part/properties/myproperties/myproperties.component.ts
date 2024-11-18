@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { PropertiesComponent } from '../properties/properties.component';
 
 @Component({
@@ -9,5 +9,6 @@ import { PropertiesComponent } from '../properties/properties.component';
   styleUrl: './myproperties.component.css'
 })
 export class MypropertiesComponent {
+  gridClasses = signal('grid grid-cols-1 md:grid-cols-3 gap-6');
 
 }

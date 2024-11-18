@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ModalService } from '../../service/modal.service';
 import { LoginModalComponent } from '../../part/modal-content/login-modal/login-modal.component';
 import { SignupModalComponent } from '../../part/modal-content/signup-modal/signup-modal.component';
