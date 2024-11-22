@@ -1,14 +1,13 @@
-
 <div class="cursor-pointer" routerLink="details">
-    <div class="relative overflow-hidden aspect-square rounded-xl">
-        <img src="images/beach_1.jpg" sizes="(max-width: 768px) 768px, (max-width: 1200px): 768px, 768px" alt="Beach house" class="hover:scale-110 object-cover transition h-full w-full"/>
-    </div>
+  <div class="relative overflow-hidden aspect-square rounded-xl">
+    <img [src]="image_url" alt="" class="hover:scale-110 object-cover transition h-full w-full"/>
+  </div>
 
-    <div class="mt-2">
-        <p class="text-lg font-bold">Property name</p>
-    </div>
+  <div class="mt-2">
+    <p class="text-lg font-bold">{{ title }}</p>
+  </div>
 
-    <div class="mt-2">
-        <p class="text-sm text-gray-500"><strong>$200</strong> per night</p>
-    </div>
+  <div class="mt-2">
+    <p class="text-sm text-gray-500"><strong>{{ price_per_night }}</strong> per night</p>
+  </div>
 </div>

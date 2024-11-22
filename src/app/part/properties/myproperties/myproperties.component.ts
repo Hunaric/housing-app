@@ -9,6 +9,6 @@ import { PropertiesComponent } from '../properties/properties.component';
   styleUrl: './myproperties.component.css'
 })
 export class MypropertiesComponent {
-  gridClasses = signal('grid grid-cols-1 md:grid-cols-3 gap-6');
+  gridClasses = 'grid grid-cols-1 md:grid-cols-3 gap-6';
 
 }
