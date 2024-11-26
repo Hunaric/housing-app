@@ -59,6 +59,10 @@ import { ApiService } from '../../../service/api.service';
     <div *ngFor="let error of errors; let i = index" class="p-5 bg-airbnb text-white rounded-xl opacity-80">
       {{ error }}
     </div>
+    
+    <div *ngIf="success" class="p-5 bg-green-400 text-white rounded-xl opacity-80">
+      {{ success }}
+    </div>
 
     <button type="submit" class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl">Submit</button>
   </form>
@@ -66,6 +70,7 @@ import { ApiService } from '../../../service/api.service';
   styleUrls: ['./signup-modal.component.css'],
 })
 export class SignupModalComponent {
+  success: string | null = null;
   errors: string[] = [];
   passwordVisible: boolean = false;
   passwordVisible1: boolean = false;
@@ -129,9 +134,10 @@ export class SignupModalComponent {
 
     if(this.errors.length === 0) {
       try {
-        const res = await this.apiService.onSignedIn(email!, password1!, password2!);
+        // const res = await this.apiService.onSignedIn(email!, password1!, password2!);
         // console.log(res);
-        window.location.reload();
+        // window.location.reload();
+        this.success = 'Account created successfully';
       } catch(error) {
         console.error('Error during sign in:', error);
       }
