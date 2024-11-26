@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; // Keep the HttpClient import
 import { ModalService } from '../../../service/modal.service';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../service/api.service';
 
 @Component({
   selector: 'app-login-modal',
   standalone: true,
-  imports: [FormsModule, CommonModule], // Remove HttpClientModule here
+  imports: [ReactiveFormsModule, CommonModule], 
   template: `
-  <form (ngSubmit)="submitLogin()" class="space-y-4">
+  <form (ngSubmit)="submitLogin()" class="space-y-4" [formGroup]="loginForm">
     <input 
-      [(ngModel)]="email" 
+      formControlName="email"
       name="email" 
       placeholder="Your e-mail address" 
       type="email" 
@@ -20,14 +21,23 @@ import { CommonModule } from '@angular/common';
       required 
     />
 
-    <input 
-      [(ngModel)]="password" 
-      name="password" 
-      placeholder="Your password" 
-      type="password" 
-      class="w-full h-[54px] px-4 border border-gray-300 rounded-xl" 
-      required 
-    />
+    <div class="relative">
+      <input 
+        formControlName="password" 
+        name="password1" 
+        placeholder="Your password" 
+        type="{{ passwordVisible ? 'text' : 'password' }}" 
+        class="w-full h-[54px] px-4 border border-gray-300 rounded-xl" 
+        required #passwordInput
+      />
+      <button class="absolute top-0 right-0 bottom-0 px-3 py-3 text-sm font-semibold text-gray-700"
+        type="button" (click)="togglePasswordVisibility(passwordInput)">
+        <i class="fas" [ngClass]="{
+            'fa-eye': passwordVisible,
+            'fa-eye-slash': !passwordVisible
+          }"></i>
+      </button>
+    </div>
     
     <div *ngFor="let error of errors; let i = index" class="p-5 bg-airbnb text-white rounded-xl opacity-80">
       {{ error }}
@@ -43,30 +53,51 @@ export class LoginModalComponent {
   email: string = '';
   password: string = '';
   errors: string[] = [];
+  passwordVisible: boolean = false;
 
-  constructor(private modalService: ModalService, private http: HttpClient, private router: Router) {}
 
-  submitLogin() {
-    const formData = {
-      email: this.email,
-      password: this.password,
-    };
+  togglePasswordVisibility(passwordInput: HTMLInputElement): void {
+    this.passwordVisible = !this.passwordVisible;
+    passwordInput.type = this.passwordVisible ? 'text' : 'password';
+  }
 
-    this.http.post<any>('/api/auth/login/', formData).subscribe(
-      (response) => {
-        if (response.access) {
-          // Handle successful login
-          // Assuming handleLogin is a service method to store user info
-          // this.authService.handleLogin(response.user.pk, response.access, response.refresh);
-          this.modalService.close(); // Close the modal
-          this.router.navigate(['/']); // Redirect to home
-        } else {
-          this.errors = response.non_field_errors || ['An error occurred'];
-        }
-      },
-      (error) => {
-        this.errors = error.error.non_field_errors || ['An error occurred'];
+  constructor(private modalService: ModalService, private http: HttpClient, private router: Router, private apiService: ApiService) {}
+
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  })
+  
+  async submitLogin() {
+    this.errors = [];
+
+    const { email, password } = this.loginForm.value;
+
+    if(!email) {
+      this.errors.push("Email required");
+    } else if(!this.loginForm.get('email')?.valid) {
+      this.errors.push("Email invalid");
+    }
+
+    if(!password) {
+      this.errors.push("Password required");
+    } else if (password.length < 8) {
+      this.errors.push("Password min lenght is 8");
+    }
+
+    if(this.errors.length === 0) {
+      try {
+        const res = await this.apiService.onLogedIn(email!, password!);
+        // console.log(res);
+        localStorage.setItem('tokenAccess', res.access);
+        localStorage.setItem('tokenRefresh', res.refresh);
+        localStorage.setItem('userId', res.user.pk);
+        this.modalService.close(); // Close the modal
+        window.location.reload();
+        // this.router.navigate(['/']); // Redirect to home
+      } catch(error) {
+        console.error('Error during sign in:', error);
       }
-    );
+    } 
   }
 }

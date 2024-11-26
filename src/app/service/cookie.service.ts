@@ -10,5 +10,7 @@ export class CookieService {
 
   handleLogin(userId: string, accessToken: string, refreshToken: string): void {
     this.cookieService.set('session_userid', userId, 7, '/', '', false, 'Lax');
+    this.cookieService.set('session_access_token', accessToken, 1/144, '/', '', false, 'Lax');
+    this.cookieService.set('session_refresh_token', refreshToken, 7, '/', '', false, 'Lax');
   }
 }

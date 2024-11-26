@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../../service/api.service';
+import { CookieService } from '../../../service/cookie.service';
 
 @Component({
   selector: 'app-signup-modal',
@@ -85,7 +86,7 @@ export class SignupModalComponent {
     passwordInput.type = this.passwordVisible1 ? 'text' : 'password';
   }
 
-  constructor(private modalService: ModalService, private http: HttpClient, private router: Router, private apiService: ApiService) {}
+  constructor(private modalService: ModalService, private http: HttpClient, private router: Router, private apiService: ApiService, private cookieService: CookieService) {}
 
   signinForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -134,10 +135,12 @@ export class SignupModalComponent {
 
     if(this.errors.length === 0) {
       try {
-        // const res = await this.apiService.onSignedIn(email!, password1!, password2!);
-        // console.log(res);
+        const res = await this.apiService.onSignedIn(email!, password1!, password2!);
+        console.log(res);
         // window.location.reload();
-        this.success = 'Account created successfully';
+        // this.cookieService.handleLogin(res.user.pk, res.access, res.refresh);
+        // this.success = 'Account created successfully';
+        this.modalService.close(); // Close the modal
       } catch(error) {
         console.error('Error during sign in:', error);
       }
