@@ -29,11 +29,16 @@ export class ApiService {
     }
   }
 
-  async onLogedIn(username: string, password: string): Promise<any> {
-    const url = `${this.apiUrl}/authentication/login`;
+  async onSignedIn(email: string, password1: string, password2: string): Promise<any> {
+    const url = `${this.apiUrl}/api/auth/register/`;
     const options = {
       method: 'POST',
-      body: '{"username":"'+username+'","password":"'+password+'"}',
+      body: '{"email":"'+email+'","password1":"'+password1+'","password2":"'+password2+'"}',
+      // body: JSON.stringify({
+      //   email,
+      //   password1,
+      //   password2
+      // }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json', 
