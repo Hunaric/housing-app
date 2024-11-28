@@ -97,6 +97,7 @@ export class LoginModalComponent {
         // this.router.navigate(['/']); // Redirect to home
       } catch(error) {
         console.error('Error during sign in:', error);
+        this.errors.push("Unknown user");
       }
     } 
   }

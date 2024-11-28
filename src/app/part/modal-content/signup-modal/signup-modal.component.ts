@@ -136,11 +136,13 @@ export class SignupModalComponent {
     if(this.errors.length === 0) {
       try {
         const res = await this.apiService.onSignedIn(email!, password1!, password2!);
-        console.log(res);
-        // window.location.reload();
+        localStorage.setItem('tokenAccess', res.access);
+        localStorage.setItem('tokenRefresh', res.refresh);
+        localStorage.setItem('userId', res.user.pk);
+        this.modalService.close(); // Close the modal
+        window.location.reload();
         // this.cookieService.handleLogin(res.user.pk, res.access, res.refresh);
         // this.success = 'Account created successfully';
-        this.modalService.close(); // Close the modal
       } catch(error) {
         console.error('Error during sign in:', error);
       }

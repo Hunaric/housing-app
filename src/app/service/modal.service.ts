@@ -1,4 +1,4 @@
-import { Injectable, Type } from '@angular/core';
+import { Injectable, Signal, signal, Type } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -20,5 +20,22 @@ export class ModalService {
 
   close() {
     this.modalState.next({ isOpen: false, content: null, label: '' });
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CategorySercive {
+  private categorySignal = signal<string | null>(null);
+
+  // Récupère la catégorie
+  getCategory(): Signal<string | null> {
+    return this.categorySignal;
+  }
+
+  // Met à jour la catégorie
+  setCategory(category: string) {
+    this.categorySignal.set(category);
   }
 }

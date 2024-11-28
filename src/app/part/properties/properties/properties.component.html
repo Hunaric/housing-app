@@ -1,4 +1,4 @@
-<div [ngClass]="gridClasses">
+<div [ngClass]="gridClasses()">
   <app-items 
     *ngFor="let item of property()"
     [image_url]="item.image_url"

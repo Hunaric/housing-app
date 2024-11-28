@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, input, Input, signal } from '@angular/core';
 import { ItemsComponent } from '../items/items.component';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../service/api.service';
@@ -15,7 +15,8 @@ export class PropertiesComponent {
   // Définition du signal avec une valeur initiale vide
   property = signal<Property[]>([]);
 
-  @Input() gridClasses!: string;
+  // @Input() gridClasses!: string;
+  gridClasses = input<string>();
 
   constructor(private apiService: ApiService) {
     this.apiService
