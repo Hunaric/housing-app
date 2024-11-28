@@ -12,8 +12,75 @@
     </div>
     
     <div *ngIf="currentStep === 2">
-    
+        <div class="pt-3 pb-6 space-y-4">
+            <div class="flex flex-col space-y-2">
+                <label for="title">Title</label>
+                <input 
+                    type="text"
+                    formControlName="title"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                />
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="description">Description</label>
+                <textarea 
+                    formControlName="description"
+                    class="w-full p-4 border border-gray-600 rounded-xl min-h-32 max-h-64 resize-y"
+                ></textarea>
+            </div>
+        </div>
     </div>
+    
+    <div *ngIf="currentStep === 3">
+        <div class="pt-3 pb-6 space-y-4">
+            <!-- Price field -->
+            <div class="flex flex-col space-y-2">
+                <label for="price">Price per night</label>
+                <input 
+                    type="number"
+                    formControlName="price"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': propertyForm.get('price')?.invalid && propertyForm.get('price')?.touched}"
+                    [min]="minPrice"                  
+                />
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="bedroom">Bedrooms</label>
+                <input 
+                    type="bedroom"
+                    formControlName="bedroom"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': propertyForm.get('bedroom')?.invalid && propertyForm.get('bedroom')?.touched}"
+                    [min]="minValue"
+                />
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="bathroom">Bathrooms</label>
+                <input 
+                    type="bathroom"
+                    formControlName="bathroom"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': propertyForm.get('bathroom')?.invalid && propertyForm.get('bathroom')?.touched}"
+                    [min]="minValue"
+                />
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="guests">Maximum number of guests</label>
+                <input 
+                    type="guests"
+                    formControlName="guests"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': propertyForm.get('guests')?.invalid && propertyForm.get('guests')?.touched}"
+                    [min]="minValue"
+                />
+            </div>
+        </div>
+    </div>
+
     <div class="flex flex-col gap-3">
         <div *ngFor="let error of errors; let i = index" class="p-5 bg-airbnb text-white rounded-xl opacity-80">
             {{ error }}
