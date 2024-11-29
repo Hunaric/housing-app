@@ -89,7 +89,11 @@ export class SignupModalComponent {
   constructor(private modalService: ModalService, private http: HttpClient, private router: Router, private apiService: ApiService, private cookieService: CookieService) {}
 
   signinForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [
+    Validators.required,
+    Validators.email, // Validation de base pour un email valide
+    Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') // Pattern pour des emails valides plus stricts
+  ]),  
     password1: new FormControl('', [Validators.required, Validators.minLength(8)]),
     password2: new FormControl('', [Validators.required]),
   }

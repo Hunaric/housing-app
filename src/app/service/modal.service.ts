@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, Signal, signal, Type } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,16 @@ export class CategorySercive {
   // Met à jour la catégorie
   setCategory(category: string) {
     this.categorySignal.set(category);
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LocationService {
+  constructor(private http: HttpClient) {}
+
+  getLocations(): Observable<any[]> {
+    return this.http.get<any[]>('json/benin_data.json');
   }
 }

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, Signal, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategorySercive, ModalService } from '../../../service/modal.service';
+import { CategorySercive, LocationService, ModalService } from '../../../service/modal.service';
 import { CategoriesComponent } from '../../../form/categories/categories.component';
+import { Arrondissement, Commune, Departement, Quartier } from '../../../interfaces/locations';
 
 @Component({
   selector: 'app-add-property-modal',
@@ -12,27 +13,36 @@ import { CategoriesComponent } from '../../../form/categories/categories.compone
   styleUrl: './add-property-modal.component.css'
 })
 export class AddPropertyModalComponent {
-  currentStep = 1;
+  data: Departement[] = [];
+  selectedDepartement: Departement | null = null;
+  isDepartementSelected = false;
+  selectedCommune: Commune | null = null;
+  isCommuneSelected = false;
+  selectedArrondissement: Arrondissement | null = null;
+  isArrondissementSelected = false;
+  selectedQuartier: Quartier | null = null;
+  isQuartierSelected = false;
+  zoneSelected: string | null = '';
+  currentStep = 4;
   errors: string[] = [];
 
-  constructor(private modalService: ModalService, private categoryService: CategorySercive) {
+  constructor(private modalService: ModalService, private categoryService: CategorySercive, locationService: LocationService) {
     // this.synchronizeCategory();
-  }
-
-  // Category Signal
-  synchronizeCategory() {
-    const selectCategory = this.categoryService.getCategory();
-
-    if (selectCategory) {
-      this.propertyForm.get('category')?.setValue(selectCategory());
-    }
-    // console.log(selectCategory);
-    
+    locationService.getLocations().subscribe(data => {
+      this.data = data;
+    })
   }
 
   minPrice = 1000;
   minValue = 1
-  // Form 
+  // Forms
+  locationForm = new FormGroup({
+    departement: new FormControl('', [Validators.required]),
+    commune: new FormControl('', [Validators.required]),
+    arrondissement: new FormControl('', [Validators.required]),
+    quarter: new FormControl('', [Validators.required]),
+  })
+  
   propertyForm = new FormGroup({
     category: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
@@ -60,6 +70,71 @@ export class AddPropertyModalComponent {
     country: new FormControl('', [Validators.required]),
     image: new FormControl(null, [Validators.required]),
   })
+
+  
+  // #Méthodes pour gérer la sélection 
+  onDepartementChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const departementId = Number(selectElement.value);
+    this.selectedDepartement = this.data.find((d: Departement) => d.id_departement === departementId) || null;
+    this.locationForm.get('departement')?.setValue(this.selectedDepartement?.libelle_departement || '');
+    this.selectedCommune = null;
+    this.selectedArrondissement = null;
+    this.isDepartementSelected = true;
+  }
+
+  onCommuneChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const communeId = Number(selectElement.value);
+    this.selectedCommune = this.selectedDepartement?.communes.find((c: Commune) => c.id_commune === communeId) || null;
+    this.locationForm.get('commune')?.setValue(this.selectedCommune?.libelle_commune || '');
+    this.selectedArrondissement = null;
+    this.isCommuneSelected = true;
+  }
+
+  onArrondissementChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const arrondissementId = Number(selectElement.value);
+    this.selectedArrondissement = this.selectedCommune?.arrondissements.find((a: Arrondissement) => a.id_arrondissement === arrondissementId) || null;
+    this.locationForm.get('arrondissement')?.setValue(this.selectedArrondissement?.libelle_arrondissement || '');
+    this.isArrondissementSelected = true;
+  }
+
+  onQuartierChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const quartierId = Number(selectElement.value);
+  
+    // Récupérer le quartier sélectionné
+    this.selectedQuartier = this.selectedArrondissement?.quartiers.find(
+      (q: Quartier) => q.id_quartier === quartierId
+    ) ?? null;
+
+    console.log(this.selectedQuartier?.libelle_quartier);
+  
+    // Si le quartier est trouvé, mettre à jour le champ country avec son libelle
+    if (this.selectedQuartier) {
+    quarter: new FormControl('', [Validators.required]),
+      this.locationForm.get('quarter')?.setValue(this.selectedQuartier.libelle_quartier); // <-- Affecte uniquement le libellé
+    } else {
+      this.locationForm.get('quarter')?.setValue(''); // Vide si aucun quartier sélectionné
+    }
+    this.isQuartierSelected = true;
+    this.zoneSelected = `${this.selectedDepartement?.libelle_departement ?? ''}/${this.selectedCommune?.libelle_commune ?? ''}/${this.selectedArrondissement?.libelle_arrondissement ?? ''}/${this.selectedQuartier?.libelle_quartier ?? ''}`;
+    this.propertyForm.get('country')?.setValue(this.zoneSelected);
+  }
+  
+  
+  // Category Signal
+  synchronizeCategory() {
+    const selectCategory = this.categoryService.getCategory();
+
+    if (selectCategory) {
+      this.propertyForm.get('category')?.setValue(selectCategory());
+    }
+    // console.log(selectCategory);
+    
+  }
+
 
   previousStep() {
     this.errors = [];
@@ -110,6 +185,12 @@ export class AddPropertyModalComponent {
           valid = false; // Si une des validations échoue, l'ensemble devient invalide
         }
         break;
+      case 4: // Vérification à l'étape 4
+        if (!this.propertyForm.get('country')?.value) {
+          this.errors.push('Please select a country');
+          valid = false;
+        }
+        break;
     }
     return valid;
   }
@@ -144,3 +225,4 @@ export class AddPropertyModalComponent {
     }
   }
 }
+
