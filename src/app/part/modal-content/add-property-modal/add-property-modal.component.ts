@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CategorySercive, LocationService, ModalService } from '../../../service/modal.service';
 import { CategoriesComponent } from '../../../form/categories/categories.component';
 import { Arrondissement, Commune, Departement, Quartier } from '../../../interfaces/locations';
+import { ApiService } from '../../../service/api.service';
 
 @Component({
   selector: 'app-add-property-modal',
@@ -23,10 +24,11 @@ export class AddPropertyModalComponent {
   selectedQuartier: Quartier | null = null;
   isQuartierSelected = false;
   zoneSelected: string | null = '';
-  currentStep = 4;
+  currentStep = 1;
+  dataImage: string | null = null;
   errors: string[] = [];
 
-  constructor(private modalService: ModalService, private categoryService: CategorySercive, locationService: LocationService) {
+  constructor(private modalService: ModalService, private categoryService: CategorySercive, locationService: LocationService, private apiService: ApiService) {
     // this.synchronizeCategory();
     locationService.getLocations().subscribe(data => {
       this.data = data;
@@ -47,17 +49,17 @@ export class AddPropertyModalComponent {
     category: new FormControl('', [Validators.required]),
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required, Validators.minLength(10)]),
-    price: new FormControl(this.minPrice, [
+    price_per_night: new FormControl(this.minPrice, [
       Validators.required, 
       Validators.min(this.minPrice),
       Validators.pattern('^[0-9]+$'),
     ]),
-    bedroom: new FormControl(this.minValue, [
+    bedrooms: new FormControl(this.minValue, [
       Validators.required, 
       Validators.min(this.minValue),
       Validators.pattern('^[0-9]+$'),
     ]),
-    bathroom: new FormControl(this.minValue, [
+    bathrooms: new FormControl(this.minValue, [
       Validators.required, 
       Validators.min(this.minValue),
       Validators.pattern('^[0-9]+$'),
@@ -68,7 +70,8 @@ export class AddPropertyModalComponent {
       Validators.pattern('^[0-9]+$'),
     ]),
     country: new FormControl('', [Validators.required]),
-    image: new FormControl(null, [Validators.required]),
+    country_code: new FormControl('+229'),
+    image: new FormControl(null as unknown as File, [Validators.required]),
   })
 
   
@@ -113,7 +116,6 @@ export class AddPropertyModalComponent {
   
     // Si le quartier est trouvé, mettre à jour le champ country avec son libelle
     if (this.selectedQuartier) {
-    quarter: new FormControl('', [Validators.required]),
       this.locationForm.get('quarter')?.setValue(this.selectedQuartier.libelle_quartier); // <-- Affecte uniquement le libellé
     } else {
       this.locationForm.get('quarter')?.setValue(''); // Vide si aucun quartier sélectionné
@@ -123,6 +125,16 @@ export class AddPropertyModalComponent {
     this.propertyForm.get('country')?.setValue(this.zoneSelected);
   }
   
+  // Image
+  setImage(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      this.propertyForm.get('image')?.setValue(file);
+      this.dataImage = URL.createObjectURL(file);
+    }
+  }
   
   // Category Signal
   synchronizeCategory() {
@@ -165,32 +177,49 @@ export class AddPropertyModalComponent {
         break;
 
       case 2:
+        const descriptionControl = this.propertyForm.get('description');
         if(!this.propertyForm.get('title')?.value) {
           this.errors.push('Please enter a title');
           valid = false;
         }
-        if(!this.propertyForm.get('description')?.value) {
+        if(!descriptionControl?.value) {
           this.errors.push('Please enter a description');
           valid = false;
+        } else if (descriptionControl?.value.length < 10) {
+          this.errors.push('Description must be at least 10 characters long');
+          valid = false;
         }
+        
         break;
 
       case 3:
         if (
-          !this.checkFieldErrors('price') || 
-          !this.checkFieldErrors('bedroom') ||
-          !this.checkFieldErrors('bathroom') ||
+          !this.checkFieldErrors('price_per_night') || 
+          !this.checkFieldErrors('bedrooms') ||
+          !this.checkFieldErrors('bathrooms') ||
           !this.checkFieldErrors('guests')
         ) {
           valid = false; // Si une des validations échoue, l'ensemble devient invalide
         }
         break;
+        
       case 4: // Vérification à l'étape 4
         if (!this.propertyForm.get('country')?.value) {
           this.errors.push('Please select a country');
           valid = false;
         }
         break;
+
+      case 5:
+        const imageFile = this.propertyForm.get('image')?.value;
+        if(!imageFile) {
+          this.errors.push('Please select an image');
+          valid = false;
+        } else if (imageFile.size > 5 * 1024 * 1024) {
+          this.errors.push('The file size exceeds the limit of 5MB.');
+          valid = false
+        }
+        break
     }
     return valid;
   }
@@ -215,14 +244,67 @@ export class AddPropertyModalComponent {
     return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
   }
 
-  submitForm() {
-    if (this.propertyForm.valid) {
-      console.log('Form data:', this.propertyForm.value);
+  // async submitForm() {
+  //   if (this.validateStep()) {
+  //     if (this.propertyForm.valid) {
+  //       try {
+  //         const response = await this.apiService.setProperty(this.propertyForm)
+  //         console.log('Response:', response);
+  //         if (response.success) {
+  //           this.modalService.close();
+  //         } 
+  //       } catch (error) {
+  //           this.errors.push('failed to submit property. Please try again later.')
+  //       }
+        
+  //     } else {
+  //       this.errors.push('Please complete all required fields.');
+  //     }
+  //   }
+  // }
+
+  async submitForm() {
+    // Vérifie la première étape de validation
+    console.log('Validation étape 1: validateStep');
+    if (this.validateStep()) {
+      console.log('Validation étape 1 réussie');
       
-      this.modalService.close();
+      // Vérifie si le formulaire est valide
+      console.log('Validation étape 2: propertyForm.valid');
+      console.log('Formulaire:', this.propertyForm.value);
+      
+      if (this.propertyForm.valid) {
+        console.log('Validation étape 2 réussie');
+        
+        try {
+          // Appel API pour soumettre les données
+          console.log('Envoi des données à l\'API');
+          const response = await this.apiService.setProperty(this.propertyForm);
+          
+          console.log('Réponse de l\'API:', response);
+          if (response.success) {
+            console.log('Soumission réussie, fermeture du modal');
+            this.modalService.close();
+          } else {
+            console.log('Échec de la soumission');
+            this.errors.push('Failed to submit property. Please try again later.');
+          }
+        } catch (error) {
+          console.error('Erreur lors de l\'appel à l\'API:', error);
+          this.errors.push('Failed to submit property. Please try again later.');
+        }
+        
+      } else {
+        console.log('Le formulaire est invalide');
+        console.log('Form Errors:', this.propertyForm.errors);
+        this.errors.push('Please complete all required fields.');
+      }
+      
     } else {
-      this.errors.push('Please complete all required fields.');
+      console.log('Échec de validateStep');
+      this.errors.push('Validation step failed.');
     }
   }
+  
 }
 

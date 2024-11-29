@@ -1,33 +1,15 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private apiUrl = environment.apiUrl
+  private accessToken = localStorage.getItem('tokenAccess');
 
   constructor() { }
-
-  async getAllHouses() {
-    const url = `${this.apiUrl}/api/properties/`;
-    const options = { 
-      method: 'GET', 
-      headers: { 
-        Accept: 'application/json',
-        'Content-Type': 'application/json', 
-      } 
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      return data;  
-    } catch (error) {
-      console.error(error);
-      throw error;      
-    }
-  }
 
   async onSignedIn(email: string, password1: string, password2: string): Promise<any> {
     const url = `${this.apiUrl}/api/auth/register/`;
@@ -103,4 +85,62 @@ export class ApiService {
       throw error;
     }
   }
+
+  
+  // Properties
+
+  async getAllHouses() {
+    const url = `${this.apiUrl}/api/properties/`;
+    const options = { 
+      method: 'GET', 
+      headers: { 
+        Accept: 'application/json',
+        'Content-Type': 'application/json', 
+      } 
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      return data;  
+    } catch (error) {
+      console.error(error);
+      throw error;      
+    }
+  }
+
+  async setProperty(propertyForm: FormGroup) {
+    const url = `${this.apiUrl}/api/properties/create/`;
+  
+    const formData = new FormData();
+    for (const field in propertyForm.controls) {
+      if (propertyForm.controls[field].value) {
+        formData.append(field, propertyForm.controls[field].value);
+      }
+    }
+  
+    try {  
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.accessToken}` // Ajout du token d'accès ici
+        },
+        body: formData
+      };
+  
+      console.log('Envoi des données à l\'API avec fetch:', url, options);
+  
+      const response = await fetch(url, options);
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+      return await response.json();
+  
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi du formulaire:', error);
+      throw error;
+    }
+  }
+  
 }

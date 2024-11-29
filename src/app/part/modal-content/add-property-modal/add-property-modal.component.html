@@ -36,34 +36,34 @@
         <div class="pt-3 pb-6 space-y-4">
             <!-- Price field -->
             <div class="flex flex-col space-y-2">
-                <label for="price">Price per night</label>
+                <label for="price_per_night">Price per night</label>
                 <input 
                     type="number"
-                    formControlName="price"
+                    formControlName="price_per_night"
                     class="w-full p-4 border border-gray-600 rounded-xl"
-                    [ngClass]="{'border-red-500': propertyForm.get('price')?.invalid && propertyForm.get('price')?.touched}"
+                    [ngClass]="{'border-red-500': propertyForm.get('price_per_night')?.invalid && propertyForm.get('price_per_night')?.touched}"
                     [min]="minPrice"                  
                 />
             </div>
 
             <div class="flex flex-col space-y-2">
-                <label for="bedroom">Bedrooms</label>
+                <label for="bedrooms">Bedrooms</label>
                 <input 
-                    type="bedroom"
-                    formControlName="bedroom"
+                    type="bedrooms"
+                    formControlName="bedrooms"
                     class="w-full p-4 border border-gray-600 rounded-xl"
-                    [ngClass]="{'border-red-500': propertyForm.get('bedroom')?.invalid && propertyForm.get('bedroom')?.touched}"
+                    [ngClass]="{'border-red-500': propertyForm.get('bedrooms')?.invalid && propertyForm.get('bedrooms')?.touched}"
                     [min]="minValue"
                 />
             </div>
 
             <div class="flex flex-col space-y-2">
-                <label for="bathroom">Bathrooms</label>
+                <label for="bathrooms">Bathrooms</label>
                 <input 
-                    type="bathroom"
-                    formControlName="bathroom"
+                    type="bathrooms"
+                    formControlName="bathrooms"
                     class="w-full p-4 border border-gray-600 rounded-xl"
-                    [ngClass]="{'border-red-500': propertyForm.get('bathroom')?.invalid && propertyForm.get('bathroom')?.touched}"
+                    [ngClass]="{'border-red-500': propertyForm.get('bathrooms')?.invalid && propertyForm.get('bathrooms')?.touched}"
                     [min]="minValue"
                 />
             </div>
@@ -152,6 +152,23 @@
 
         </form>
     </div>
+
+    
+    <div *ngIf="currentStep === 5">
+        <div class="pt-3 pb-6 space-y-4">
+            <div class="py-4 px-6 bg-gray-600 text-white rounded-xl">
+                <label for="fileInput" class="w-full h-12 cursor-pointer bg-gray-700 hover:bg-gray-800 rounded-lg flex items-center justify-center">
+                  Select an Image
+                </label>
+                <input type="file" accept="image/*" id="fileInput" (change)="setImage($event)" hidden>
+            </div>
+
+            <div *ngIf="dataImage" class="w-[200px] h-[150px relative]">
+                <img [src]="dataImage" alt="Uploaded Image" class="w-full h-full object-cover rounded-xl">
+            </div>
+        </div>
+    </div>
+
 
     <div class="flex flex-col gap-3">
         <div *ngFor="let error of errors; let i = index" class="p-5 bg-airbnb text-white rounded-xl opacity-80">
