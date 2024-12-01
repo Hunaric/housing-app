@@ -1,4 +1,4 @@
-<div class="cursor-pointer" routerLink="details">
+<div class="cursor-pointer" [routerLink]="['details', id]">
   <div class="relative overflow-hidden aspect-square rounded-xl">
     <img [src]="image_url" alt="" class="hover:scale-110 object-cover transition h-full w-full"/>
   </div>
@@ -8,6 +8,6 @@
   </div>
 
   <div class="mt-2">
-    <p class="text-sm text-gray-500"><strong>{{ price_per_night }}</strong> per night</p>
+    <p class="text-sm text-gray-500"><strong>${{ price_per_night }}</strong> per night</p>
   </div>
 </div>

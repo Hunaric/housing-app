@@ -109,6 +109,37 @@ export class ApiService {
     }
   }
 
+  async getPropertyDetail(id: string) {
+    const url = `${this.apiUrl}/api/properties/${id}`;
+    const options = { 
+      method: 'GET', 
+      headers: { 
+        Accept: 'application/json',
+        'Content-Type': 'application/json', 
+      } 
+    };
+  
+    try {
+      const response = await fetch(url, options);
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch property details, status: ${response.status}`);
+      }
+  
+      // Si la réponse est au format JSON
+      if (response.headers.get('Content-Type')?.includes('application/json')) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error('Expected JSON response, but got a different content type');
+      }
+    } catch (error) {
+      console.error('Error fetching property details:', error);
+      throw error;
+    }
+  }
+  
+
   async setProperty(propertyForm: FormGroup) {
     const url = `${this.apiUrl}/api/properties/create/`;
   

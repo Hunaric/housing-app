@@ -1,6 +1,7 @@
 <div [ngClass]="gridClasses()">
   <app-items 
     *ngFor="let item of property()"
+    [id]="item.id"
     [image_url]="item.image_url"
     [title]="item.title"
     [price_per_night]="item.price_per_night">
