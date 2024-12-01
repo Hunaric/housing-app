@@ -168,6 +168,41 @@
             </div>
         </div>
     </div>
+    
+    <div *ngIf="currentStep === 6">
+        <div class="pt-3 pb-6 space-y-4">
+          <div class="grid grid-cols-3 gap-2">
+            <!-- Boucle sur les images ajoutées -->
+            <div *ngFor="let image of images; let i = index" class="relative w-[200px] h-[200px] bg-gray-600 rounded-xl overflow-hidden">
+              <img *ngIf="image" [src]="image" alt="Uploaded Image {{ i + 1 }}" class="w-full h-full object-cover">
+              <button (click)="removeImage(i)" class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                &times;
+              </button>
+            </div>
+      
+            <!-- Carré pour ajouter une nouvelle image -->
+            <div *ngIf="images.length < maxImages" class="relative w-[200px] h-[200px] bg-gray-700 rounded-xl flex items-center justify-center cursor-pointer hover:bg-gray-800" (click)="triggerFileInput()">
+              <div class="text-center">
+                <div class="bg-gray-800 p-4 rounded-full">
+                  <span class="text-white text-4xl">+</span>
+                </div>
+                <p class="text-white mt-2">Choose Image</p>
+              </div>
+            </div>
+          </div>
+      
+          <!-- Bouton "Pas d'image" -->
+          <!-- <div *ngIf="images.length === 0" class="text-center mt-4">
+            <button (click)="skipImageSelection()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg">
+              Skip Image Selection
+            </button>
+          </div> -->
+      
+          <!-- Input caché pour sélectionner une image -->
+          <input type="file" accept="image/*" id="fileInput" multiple (change)="addImages($event)" hidden>
+        </div>
+      </div>
+      
 
 
     <div class="flex flex-col gap-3">
@@ -176,8 +211,8 @@
         </div>
         <div class="w-full gap-4 flex flex-row">
             <button *ngIf="currentStep > 1" class="w-full h-[54px] bg-black text-white rounded-xl" (click)="previousStep()">Previous</button>
-            <button *ngIf="currentStep < 5" class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl" (click)="nextStep()">Next</button>
-            <button type="submit" *ngIf="currentStep === 5" class="w-full h-[54px] bg-blue-600 text-white rounded-xl" (click)="submitForm()">Submit</button>
+            <button *ngIf="currentStep < 6" class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl" (click)="nextStep()">Next</button>
+            <button type="submit" *ngIf="currentStep === 6" class="w-full h-[54px] bg-blue-600 text-white rounded-xl" (click)="submitForm()">Submit</button>
         </div>
     </div>
 </form>

@@ -25,6 +25,8 @@ export class AddPropertyModalComponent {
   isQuartierSelected = false;
   zoneSelected: string | null = '';
   currentStep = 1;
+  images: string[] = []
+  maxImages: number = 5
   dataImage: string | null = null;
   errors: string[] = [];
 
@@ -72,6 +74,7 @@ export class AddPropertyModalComponent {
     country: new FormControl('', [Validators.required]),
     country_code: new FormControl('+229'),
     image: new FormControl(null as unknown as File, [Validators.required]),
+    additionnal_images: new FormControl([] as File[]),
   })
 
   
@@ -135,6 +138,59 @@ export class AddPropertyModalComponent {
       this.dataImage = URL.createObjectURL(file);
     }
   }
+  
+  triggerFileInput(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  addImages(event: Event): void {
+    const input = event.target as HTMLInputElement;
+  
+    if (input.files) {
+      const files = Array.from(input.files); // Convertit FileList en tableau
+      console.log('Fichiers sélectionnés:', files);
+  
+      const existingImages = this.propertyForm.get('additionnal_images')?.value || [];
+      console.log('Images existantes:', existingImages);
+  
+      if (existingImages.length + files.length > this.maxImages) {
+        this.errors.push(`You can upload a maximum of ${this.maxImages} images.`);
+        console.log('Erreur: trop d\'images', this.errors);
+        return;
+      }
+  
+      // Ajoute les fichiers sélectionnés au tableau existant
+      this.propertyForm.get('additionnal_images')?.setValue([...existingImages, ...files]);
+      console.log('Nouvelles images dans le formulaire:', this.propertyForm.get('additionnal_images')?.value);
+  
+      // Ajoute les prévisualisations
+      files.forEach((file: File) => {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          const result = e.target?.result as string;
+          this.images.push(result); // Pour afficher les prévisualisations
+          console.log('Prévisualisation ajoutée:', result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  }
+
+  removeImage(index: number): void {
+    console.log('Suppression de l\'image à l\'index:', index);
+    
+    // Vérifie si l'index est valide avant de supprimer
+    if (index >= 0 && index < this.images.length) {
+      this.images.splice(index, 1);
+      console.log('Image supprimée. Nouveau tableau des images:', this.images);
+    } else {
+      console.log('Erreur: index non valide pour la suppression.');
+    }
+  }
+
   
   // Category Signal
   synchronizeCategory() {

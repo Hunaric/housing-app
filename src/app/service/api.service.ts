@@ -114,8 +114,15 @@ export class ApiService {
   
     const formData = new FormData();
     for (const field in propertyForm.controls) {
-      if (propertyForm.controls[field].value) {
-        formData.append(field, propertyForm.controls[field].value);
+      
+      if (field === 'additionnal_images') {
+        const images = propertyForm.controls[field].value as File[];
+        images.forEach((file) => {
+            formData.append('additionnal_images[]', file); // Utilisez 'additionnal_images[]' ici
+        });
+        console.log('Service formData for additionnal images:', formData);
+      } else if (propertyForm.controls[field].value) {
+          formData.append(field, propertyForm.controls[field].value);
       }
     }
   
@@ -142,5 +149,5 @@ export class ApiService {
       throw error;
     }
   }
-  
+
 }
