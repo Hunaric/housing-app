@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, Signal, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategorySercive, LocationService, ModalService } from '../../../service/modal.service';
+import { CategorySercive, LocationService, ModalService, SuccessMessageService } from '../../../service/modal.service';
 import { CategoriesComponent } from '../../../form/categories/categories.component';
 import { Arrondissement, Commune, Departement, Quartier } from '../../../interfaces/locations';
 import { ApiService } from '../../../service/api.service';
+import { SuccessMessageComponent } from '../../notification/success-message/success-message.component';
 
 @Component({
   selector: 'app-add-property-modal',
@@ -30,7 +31,7 @@ export class AddPropertyModalComponent {
   dataImage: string | null = null;
   errors: string[] = [];
 
-  constructor(private modalService: ModalService, private categoryService: CategorySercive, locationService: LocationService, private apiService: ApiService) {
+  constructor(private modalService: ModalService, private successMessageService: SuccessMessageService, private categoryService: CategorySercive, locationService: LocationService, private apiService: ApiService) {
     // this.synchronizeCategory();
     locationService.getLocations().subscribe(data => {
       this.data = data;
@@ -38,7 +39,7 @@ export class AddPropertyModalComponent {
   }
 
   minPrice = 1000;
-  minValue = 1
+  minValue = 1;
   // Forms
   locationForm = new FormGroup({
     departement: new FormControl('', [Validators.required]),
@@ -300,64 +301,27 @@ export class AddPropertyModalComponent {
     return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
   }
 
-  // async submitForm() {
-  //   if (this.validateStep()) {
-  //     if (this.propertyForm.valid) {
-  //       try {
-  //         const response = await this.apiService.setProperty(this.propertyForm)
-  //         console.log('Response:', response);
-  //         if (response.success) {
-  //           this.modalService.close();
-  //         } 
-  //       } catch (error) {
-  //           this.errors.push('failed to submit property. Please try again later.')
-  //       }
-        
-  //     } else {
-  //       this.errors.push('Please complete all required fields.');
-  //     }
-  //   }
-  // }
 
   async submitForm() {
-    // Vérifie la première étape de validation
-    console.log('Validation étape 1: validateStep');
     if (this.validateStep()) {
-      console.log('Validation étape 1 réussie');
-      
-      // Vérifie si le formulaire est valide
-      console.log('Validation étape 2: propertyForm.valid');
-      console.log('Formulaire:', this.propertyForm.value);
-      
       if (this.propertyForm.valid) {
-        console.log('Validation étape 2 réussie');
-        
         try {
-          // Appel API pour soumettre les données
-          console.log('Envoi des données à l\'API');
           const response = await this.apiService.setProperty(this.propertyForm);
-          
-          console.log('Réponse de l\'API:', response);
           if (response.success) {
-            console.log('Soumission réussie, fermeture du modal');
-            this.modalService.close();
+            // Afficher le message de succès et ouvrir le modal
+            this.successMessageService.showSuccessMessage('Property submitted successfully!');
+            this.modalService.open('Success', SuccessMessageComponent);
+            // Le modal sera fermé automatiquement après 3 secondes grâce au setTimeout dans le composant
           } else {
-            console.log('Échec de la soumission');
             this.errors.push('Failed to submit property. Please try again later.');
           }
         } catch (error) {
-          console.error('Erreur lors de l\'appel à l\'API:', error);
           this.errors.push('Failed to submit property. Please try again later.');
         }
-        
       } else {
-        console.log('Le formulaire est invalide');
-        console.log('Form Errors:', this.propertyForm.errors);
         this.errors.push('Please complete all required fields.');
       }
-      
     } else {
-      console.log('Échec de validateStep');
       this.errors.push('Validation step failed.');
     }
   }

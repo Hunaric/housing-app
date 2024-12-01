@@ -1,0 +1,16 @@
+/* Styles pour la barre de progression */
+.progress-bar-container {
+    width: 100%;
+    height: 5px;
+    background-color: #ffeb3b; /* Jaune clair */
+    margin-top: 10px;
+    border-radius: 2px;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background-color: #fbc02d; /* Jaune foncé */
+    border-radius: 2px;
+    transition: width 0.1s linear; /* Animation de transition pour la largeur */
+  }
+  

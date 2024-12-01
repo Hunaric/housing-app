@@ -46,8 +46,22 @@ export class CategorySercive {
 })
 export class LocationService {
   constructor(private http: HttpClient) {}
-
+  
   getLocations(): Observable<any[]> {
     return this.http.get<any[]>('json/benin_data.json');
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SuccessMessageService {
+  private successMessageSubject = new BehaviorSubject<string>('');
+  successMessage$ = this.successMessageSubject.asObservable();
+
+  constructor() {}
+
+  showSuccessMessage(message: string) {
+    this.successMessageSubject.next(message);
   }
 }
