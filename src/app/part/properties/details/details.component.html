@@ -40,7 +40,7 @@
         </div>
 
         <div class="col-span-2">
-            <app-reservation-sidebar />
+            <app-reservation-sidebar [id]="property?.id || ''" [guests]="property?.guests || 1" [price_per_night]="property?.price_per_night || 0"/>
         </div>
     </div>
 </main>

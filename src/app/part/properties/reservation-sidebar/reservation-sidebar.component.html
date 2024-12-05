@@ -1,21 +1,20 @@
 <aside class="mt-6 p-6 col-span-2 rounded-xl border border-gray-300 shadow-xl">
-    <h2 class="mb-2 text-2xl">$200 per night</h2>
-
-    <div class="mb-6 p-3 border border-gray-400 rounded-xl">    
-        <label for="" class="mb-2 block font-bold text-xs">Guests</label>
-        <select class="w-full -ml-1 text-xs" name="" id="">
-            <option value="">1</option>
-            <option value="">2</option>
-            <option value="">3</option>
+    <h2 class="mb-2 text-2xl">${{ price_per_night }} per night</h2>
+    
+    <div class="mb-6 p-3 border border-gray-400 rounded-xl">
+        <label for="guests" class="mb-2 block font-bold text-xs">Guests</label>
+        <select class="w-full -ml-1 text-xs" name="guests" id="guests">
+            <option *ngFor="let guest of getGuestsArray()" [value]="guest">{{ guest }}</option>
         </select>
     </div>
+    
 
     <div class="w-full mb-6 py-6 text-center text-white bg-airbnb hover:bg-airbnb-dark rounded-xl">
         Book
     </div>
 
     <div class="mb-4 flex justify-between items-center">
-        <p>$200 * 4 nights</p>
+        <p>${{ price_per_night }} * 4 nights</p>
 
         <p>$800</p>
     </div>
