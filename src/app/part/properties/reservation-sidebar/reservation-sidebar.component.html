@@ -1,6 +1,12 @@
 <aside class="mt-6 p-6 col-span-2 rounded-xl border border-gray-300 shadow-xl">
     <h2 class="mb-2 text-2xl">${{ price_per_night }} per night</h2>
     
+
+  <mat-form-field class="w-full">
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date range" (dateChange)="onDateChange($event)" [value]="dateRange.startDate">
+    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
+  </mat-form-field>
+
     <div class="mb-6 p-3 border border-gray-400 rounded-xl">
         <label for="guests" class="mb-2 block font-bold text-xs">Guests</label>
         <select class="w-full -ml-1 text-xs" name="guests" id="guests">
