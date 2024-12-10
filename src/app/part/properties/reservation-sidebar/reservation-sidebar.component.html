@@ -1,39 +1,57 @@
 <aside class="mt-6 p-6 col-span-2 rounded-xl border border-gray-300 shadow-xl">
-    <h2 class="mb-2 text-2xl">${{ price_per_night }} per night</h2>
-    
+  <h2 class="mb-2 text-2xl">${{ price_per_night }} per night</h2>
 
-  <mat-form-field class="w-full">
-    <input matInput [matDatepicker]="picker" placeholder="Choose a date range" (dateChange)="onDateChange($event)" [value]="dateRange.startDate">
-    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
-  </mat-form-field>
+  <!-- DatePicker -->
+  <div class="w-full flex flex-col justify-center items-center gap-8 py-3">
+    <mat-card class="demo-inline-calendar-card w-80" appearance="raised">
+      <mat-calendar 
+        [dateClass]="dateClass" 
+        (selectedChange)="onDateSelected($event)">
+      </mat-calendar>
+    </mat-card>
 
-    <div class="mb-6 p-3 border border-gray-400 rounded-xl">
-        <label for="guests" class="mb-2 block font-bold text-xs">Guests</label>
-        <select class="w-full -ml-1 text-xs" name="guests" id="guests">
-            <option *ngFor="let guest of getGuestsArray()" [value]="guest">{{ guest }}</option>
-        </select>
+    <p>
+      <span [ngClass]="{'start-date': campaignOne.get('start')?.value}">
+        Start Date: {{ campaignOne.get('start')?.value | date: 'dd/MM/yyyy' }}
+      </span>
+      <span [ngClass]="{'end-date': campaignOne.get('end')?.value}">
+        End Date: {{ campaignOne.get('end')?.value | date: 'dd/MM/yyyy' }}
+      </span>
+    </p>
+
+    <div *ngIf="campaignOne.errors?.['invalidDateRange']">
+      <p class="error-text">La date de fin doit être postérieure à la date de début.</p>
     </div>
-    
+  </div>
 
-    <div class="w-full mb-6 py-6 text-center text-white bg-airbnb hover:bg-airbnb-dark rounded-xl">
-        Book
-    </div>
+  <!-- Sélection des invités -->
+  <div class="mb-6 p-3 border border-gray-400 rounded-xl">
+    <label for="guests" class="mb-2 block font-bold text-xs">Guests</label>
+    <select class="w-full -ml-1 text-xs" name="guests" id="guests">
+      <option *ngFor="let guest of getGuestsArray()" [value]="guest">
+        {{ guest }}
+      </option>
+    </select>
+  </div>
 
-    <div class="mb-4 flex justify-between items-center">
-        <p>${{ price_per_night }} * 4 nights</p>
+  <!-- Bouton de réservation -->
+  <div class="w-full mb-6 py-6 text-center text-white bg-airbnb hover:bg-airbnb-dark rounded-xl">
+    Book
+  </div>
 
-        <p>$800</p>
-    </div>
-    <div class="mb-4 flex justify-between items-center">
-        <p>DjangoBnb fee</p>
+  <!-- Détails du prix -->
+  <div class="mb-4 flex justify-between items-center">
+    <p>${{ price_per_night }} * {{ nights }} nights</p>
+    <p>${{ totalPrice }}</p>
+  </div>
+  <div class="mb-4 flex justify-between items-center">
+    <p>DjangoBnb fee</p>
+    <p>$40</p>
+  </div>
+  <hr />
 
-        <p>$40</p>
-    </div>
-    <hr />
-
-    <div class="mt-4 flex justify-between items-center font-bold">
-        <p>Total</p>
-
-        <p>$840</p>
-    </div>
+  <div class="mt-4 flex justify-between items-center font-bold">
+    <p>Total</p>
+    <p>${{ totalPrice + 40 }}</p>
+  </div>
 </aside>

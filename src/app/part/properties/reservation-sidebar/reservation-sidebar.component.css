@@ -1,0 +1,25 @@
+/* Couleur de fond pour la date sélectionnée */
+.mat-calendar .mat-calendar-body .mat-calendar-body-cell-selected {
+  background-color: red !important; /* Couleur de fond pour la date sélectionnée */
+  color: orange !important; /* Couleur du texte pour la date sélectionnée */
+}
+
+/* Couleur de fond pour la date d'aujourd'hui */
+.mat-calendar .mat-calendar-body .mat-calendar-body-cell-today {
+  border: 2px solid blue; /* Bordure pour la date d'aujourd'hui */
+}
+
+/* Couleur de fond pour les dates dans la plage */
+.mat-calendar .mat-calendar-body .mat-calendar-body-cell-in-range {
+  background-color: lightblue !important; /* Couleur de fond pour les dates dans la plage */
+}
+
+/* Couleur de fond au survol */
+.mat-calendar .mat-calendar-body .mat-calendar-body-cell:hover {
+  background-color: lightgray !important; /* Couleur de fond au survol */
+}
+
+/* Couleur de texte pour les dates désactivées */
+.mat-calendar .mat-calendar-body .mat-calendar-body-cell-disabled {
+  color: #ccc; /* Couleur du texte pour les dates désactivées */
+}
