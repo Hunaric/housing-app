@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ModalService, SuccessMessageService } from '../../../service/modal.service';
 
 @Component({
-  selector: 'app-success-message',
-  template: `
+    selector: 'app-success-message',
+    template: `
     <div class="bg-green-600 w-full h-full py-4 px-4 rounded-xl">
       <div class="flex justify-center items-center gap-2 text-white">
         <i class="fa fa-check-circle"></i>  <!-- Icône de succès -->
@@ -15,7 +15,8 @@ import { ModalService, SuccessMessageService } from '../../../service/modal.serv
       </div>
     </div>
   `,
-  styleUrls: ['./success-message.component.css']
+    styleUrls: ['./success-message.component.css'],
+    standalone: false
 })
 export class SuccessMessageComponent {
   message: string = '';

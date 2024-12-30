@@ -4,11 +4,10 @@ import { PropertiesComponent } from '../properties/properties/properties.compone
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-pages',
-  standalone: true,
-  imports: [CategoriesComponent, PropertiesComponent, CommonModule],
-  templateUrl: './pages.component.html',
-  styleUrl: './pages.component.css'
+    selector: 'app-pages',
+    imports: [CategoriesComponent, PropertiesComponent, CommonModule],
+    templateUrl: './pages.component.html',
+    styleUrl: './pages.component.css'
 })
 export class PagesComponent {
   gridClasses = signal('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6');

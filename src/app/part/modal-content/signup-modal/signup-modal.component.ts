@@ -8,10 +8,9 @@ import { ApiService } from '../../../service/api.service';
 import { CookieService } from '../../../service/cookie.service';
 
 @Component({
-  selector: 'app-signup-modal',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  template: `
+    selector: 'app-signup-modal',
+    imports: [CommonModule, ReactiveFormsModule],
+    template: `
   <form (submit)="submitSignup()" class="space-y-4" [formGroup]="signinForm">
     <input 
       formControlName="email" 
@@ -68,7 +67,7 @@ import { CookieService } from '../../../service/cookie.service';
     <button type="submit" class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl">Submit</button>
   </form>
 `,
-  styleUrls: ['./signup-modal.component.css'],
+    styleUrls: ['./signup-modal.component.css']
 })
 export class SignupModalComponent {
   success: string | null = null;

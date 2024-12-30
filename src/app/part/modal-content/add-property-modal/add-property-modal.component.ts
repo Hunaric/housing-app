@@ -8,11 +8,10 @@ import { ApiService } from '../../../service/api.service';
 import { SuccessMessageComponent } from '../../notification/success-message/success-message.component';
 
 @Component({
-  selector: 'app-add-property-modal',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, CategoriesComponent],
-  templateUrl: './add-property-modal.component.html',
-  styleUrl: './add-property-modal.component.css'
+    selector: 'app-add-property-modal',
+    imports: [ReactiveFormsModule, CommonModule, CategoriesComponent],
+    templateUrl: './add-property-modal.component.html',
+    styleUrl: './add-property-modal.component.css'
 })
 export class AddPropertyModalComponent {
   data: Departement[] = [];

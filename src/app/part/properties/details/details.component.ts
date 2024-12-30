@@ -6,11 +6,10 @@ import { PropertyDetail } from '../../../interfaces/properties';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-details',
-  standalone: true,
-  imports: [ReservationSidebarComponent, RouterModule, CommonModule],
-  templateUrl: './details.component.html',
-  styleUrl: './details.component.css'
+    selector: 'app-details',
+    imports: [ReservationSidebarComponent, RouterModule, CommonModule],
+    templateUrl: './details.component.html',
+    styleUrl: './details.component.css'
 })
 export class DetailsComponent {
   route: ActivatedRoute = inject(ActivatedRoute);

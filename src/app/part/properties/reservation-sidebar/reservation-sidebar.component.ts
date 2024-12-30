@@ -1,21 +1,32 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: 'app-reservation-sidebar',
-  standalone: true,
-  providers: [provideNativeDateAdapter()],
-  imports: [CommonModule, MatFormField, MatDatepickerModule,  MatCardModule, MatInputModule, MatNativeDateModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './reservation-sidebar.component.html',
-  styleUrls: ['./reservation-sidebar.component.css']
+    selector: 'app-reservation-sidebar',
+    providers: [provideNativeDateAdapter()],
+    imports: [CommonModule, MatFormFieldModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './reservation-sidebar.component.html',
+    animations: [
+      trigger('transitionMessages', [
+        state('void', style({ opacity: 0 })),
+        state('*', style({ opacity: 1 })),
+        transition(':enter', [
+          animate('300ms ease-in')
+        ]),
+        transition(':leave', [
+          animate('300ms ease-out')
+        ])
+      ])
+    ],
+    styleUrls: ['./reservation-sidebar.component.css']
 })
 export class ReservationSidebarComponent {
   @Input() id!: string;
@@ -29,7 +40,6 @@ export class ReservationSidebarComponent {
   });
 
   // Variables pour gérer les dates et le calcul du prix
-  dateRange: { startDate: Date | null, endDate: Date | null } = { startDate: null, endDate: null };
   totalPrice: number = 0;
   nights: number = 1;
 
@@ -40,9 +50,9 @@ export class ReservationSidebarComponent {
 
     if (startDate && endDate) {
       const differenceInTime = endDate.getTime() - startDate.getTime();
-      this.nights = Math.max(Math.ceil(differenceInTime / (1000 * 3600 * 24)), 1); // Assurer qu'il y a au moins 1 nuit
+      this.nights = Math.max(Math.ceil(differenceInTime / (1000 * 3600 * 24)), 1);
     } else {
-      this.nights = 1; // Si seule la date de début est définie, on considère 1 nuit par défaut
+      this.nights = 1;
     }
 
     this.totalPrice = this.nights * this.price_per_night;
@@ -66,32 +76,23 @@ export class ReservationSidebarComponent {
       this.campaignOne.get('end')?.setValue(date);
     }
 
-    // Calculer le total des nuits et du prix à chaque sélection de date
     this.calculateTotalPrice();
   }
 
-  // Fonction pour vérifier si la date est dans la plage
-  isDateInRange(date: Date): boolean {
-    const start = this.campaignOne.get('start')?.value;
-    const end = this.campaignOne.get('end')?.value;
-  
-    if (start instanceof Date && end instanceof Date) {
-      return date > start && date < end;
+  // Classe CSS pour le calendrier en fonction des dates sélectionnées
+  dateClass = (date: Date) => {
+    const startDate = this.campaignOne.get('start')?.value;
+    const endDate = this.campaignOne.get('end')?.value;
+
+    if (this.isSameDay(date, startDate)) {
+      return 'start-date';
+    } else if (this.isSameDay(date, endDate)) {
+      return 'end-date';
+    } else if (startDate && endDate && date > startDate && date < endDate) {
+      return 'range-date';
     }
-    return false;
-  }  
-
-  // Fonction pour vérifier si la date est la date de début
-  isStartDate(date: Date): boolean {
-    const start = this.campaignOne.get('start')?.value;
-    return this.isSameDay(date, start);
-  }
-
-  // Fonction pour vérifier si la date est la date de fin
-  isEndDate(date: Date): boolean {
-    const end = this.campaignOne.get('end')?.value;
-    return this.isSameDay(date, end);
-  }
+    return '';
+  };
 
   // Vérifier si deux dates sont identiques (jour, mois, année)
   isSameDay(date1: Date | null | undefined, date2: Date | null | undefined): boolean {
@@ -102,21 +103,6 @@ export class ReservationSidebarComponent {
            date1.getMonth() === date2.getMonth() &&
            date1.getFullYear() === date2.getFullYear();
   }
-
-  // Classe CSS pour le calendrier en fonction des dates sélectionnées
-  dateClass = (date: Date) => {
-    const startDate = this.campaignOne.get('start')?.value;
-    const endDate = this.campaignOne.get('end')?.value;
-  
-    if (this.isSameDay(date, startDate)) {
-      return 'start-date';
-    } else if (this.isSameDay(date, endDate)) {
-      return 'end-date';
-    } else if (startDate && endDate && date > startDate && date < endDate) {
-      return 'range-date';
-    }
-    return '';
-  };
 
   // Fonction pour obtenir le tableau de 1 à `guests`
   getGuestsArray(): number[] {

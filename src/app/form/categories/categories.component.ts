@@ -3,11 +3,10 @@ import { Component, Signal, signal } from '@angular/core';
 import { CategorySercive } from '../../service/modal.service';
 
 @Component({
-  selector: 'app-categories',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './categories.component.html',
-  styleUrl: './categories.component.css'
+    selector: 'app-categories',
+    imports: [CommonModule],
+    templateUrl: './categories.component.html',
+    styleUrl: './categories.component.css'
 })
 export class CategoriesComponent {
   constructor(private categoryService: CategorySercive) {}

@@ -7,10 +7,9 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../service/api.service';
 
 @Component({
-  selector: 'app-login-modal',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule], 
-  template: `
+    selector: 'app-login-modal',
+    imports: [ReactiveFormsModule, CommonModule],
+    template: `
   <form (ngSubmit)="submitLogin()" class="space-y-4" [formGroup]="loginForm">
     <input 
       formControlName="email"
@@ -47,7 +46,7 @@ import { ApiService } from '../../../service/api.service';
   </form>
   
   `,
-  styleUrls: ['./login-modal.component.css'],
+    styleUrls: ['./login-modal.component.css']
 })
 export class LoginModalComponent {
   email: string = '';

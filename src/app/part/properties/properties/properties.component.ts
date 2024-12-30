@@ -5,11 +5,10 @@ import { ApiService } from '../../../service/api.service';
 import { Properties, Property } from '../../../interfaces/properties';
 
 @Component({
-  selector: 'app-properties',
-  standalone: true,
-  imports: [ItemsComponent, CommonModule],
-  templateUrl: './properties.component.html',
-  styleUrls: ['./properties.component.css']
+    selector: 'app-properties',
+    imports: [ItemsComponent, CommonModule],
+    templateUrl: './properties.component.html',
+    styleUrls: ['./properties.component.css']
 })
 export class PropertiesComponent {
   // Définition du signal avec une valeur initiale vide

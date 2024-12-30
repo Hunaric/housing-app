@@ -3,11 +3,10 @@ import { PropertiesComponent } from '../../properties/properties/properties.comp
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-landlord',
-  standalone: true,
-  imports: [PropertiesComponent, CommonModule],
-  templateUrl: './landlord.component.html',
-  styleUrl: './landlord.component.css'
+    selector: 'app-landlord',
+    imports: [PropertiesComponent, CommonModule],
+    templateUrl: './landlord.component.html',
+    styleUrl: './landlord.component.css'
 })
 export class LandlordComponent {
 

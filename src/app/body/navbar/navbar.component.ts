@@ -5,11 +5,10 @@ import { AddPropertieButtonComponent } from '../add-propertie-button/add-propert
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [SearchFiltersComponent, UserNavComponent, AddPropertieButtonComponent, RouterModule],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+    selector: 'app-navbar',
+    imports: [SearchFiltersComponent, UserNavComponent, AddPropertieButtonComponent, RouterModule],
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
 

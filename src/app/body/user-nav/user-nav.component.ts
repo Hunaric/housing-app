@@ -7,11 +7,10 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 
 @Component({
-  selector: 'app-user-nav',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './user-nav.component.html',
-  styleUrl: './user-nav.component.css'
+    selector: 'app-user-nav',
+    imports: [CommonModule],
+    templateUrl: './user-nav.component.html',
+    styleUrl: './user-nav.component.css'
 })
 export class UserNavComponent {
   userNavIsOpen: boolean = false;

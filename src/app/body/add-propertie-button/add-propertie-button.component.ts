@@ -5,11 +5,10 @@ import { AddPropertyModalComponent } from '../../part/modal-content/add-property
 import { SuccessMessageComponent } from '../../part/notification/success-message/success-message.component';
 
 @Component({
-  selector: 'app-add-propertie-button',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './add-propertie-button.component.html',
-  styleUrl: './add-propertie-button.component.css'
+    selector: 'app-add-propertie-button',
+    imports: [CommonModule],
+    templateUrl: './add-propertie-button.component.html',
+    styleUrl: './add-propertie-button.component.css'
 })
 export class AddPropertieButtonComponent {
 
