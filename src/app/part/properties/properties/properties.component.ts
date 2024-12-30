@@ -27,5 +27,15 @@ export class PropertiesComponent {
         console.log('Property array:', this.property()); // Log supplémentaire
         console.log(this.property().map(p => p.image_url));
       });
+    /* this.apiService.getHouses().subscribe({
+        next: (properties: Properties) => {
+          this.property.set(properties.data);
+          console.log('Properties received:', properties);
+        }, 
+        error: (err) => {
+          console.log('Error during properties');
+          
+        }
+      }); */
   }
 }

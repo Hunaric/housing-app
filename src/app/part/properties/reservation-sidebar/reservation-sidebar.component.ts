@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-reservation-sidebar',
   standalone: true,
   providers: [provideNativeDateAdapter()],
-  imports: [CommonModule, MatFormFieldModule, MatDatepickerModule, MatCardModule, MatInputModule, MatNativeDateModule, ReactiveFormsModule],
+  imports: [CommonModule, MatFormField, MatDatepickerModule,  MatCardModule, MatInputModule, MatNativeDateModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './reservation-sidebar.component.html',
   styleUrls: ['./reservation-sidebar.component.css']

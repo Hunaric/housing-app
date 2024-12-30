@@ -25,3 +25,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Commands
+
+When click on Ctrl+Z, enter this command to see port 4200: `lsof -i :4200` and then, execute `kill -9 <PID>` to kill all device using that port

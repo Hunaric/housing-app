@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Properties, Property } from '../interfaces/properties';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +12,7 @@ export class ApiService {
   private apiUrl = environment.apiUrl
   private accessToken = localStorage.getItem('tokenAccess');
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   async onSignedIn(email: string, password1: string, password2: string): Promise<any> {
     const url = `${this.apiUrl}/api/auth/register/`;
@@ -107,6 +110,10 @@ export class ApiService {
       console.error(error);
       throw error;      
     }
+  }
+
+  getHouses(): Observable<Properties> {
+    return this.http.get<Properties>(`${this.apiUrl}/api/properties/`);
   }
 
   async getPropertyDetail(id: string) {
