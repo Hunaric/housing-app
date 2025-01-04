@@ -76,48 +76,77 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
   constructor (private apiService: ApiService, private modalService: ModalService) {}
 
   ngOnInit(): void {
-    console.log('ID initialisé (ngOnInit):', this.id);
   }
 
   bookedDate: Date[] = [];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['id']) {
-      // Ce code sera appelé chaque fois que l'ID change
-      console.log('ID a changé (ngOnChanges):', this.id);
-      this.apiService.getPropertyReservation(this.id).then(reservation => {
-        console.log(reservation);
-        this.bookedDate = [];
-        reservation.forEach((res: any) => {
-          // Vérification des dates de début et de fin
-          if (res.start_date && res.end_date) {
-            const startDate = new Date(res.start_date);
-            const endDate = new Date(res.end_date);
-  
-            // Ajouter la plage de dates à notre tableau 'dates'
-            let currentDate = startDate;
-            while (currentDate <= endDate) {
-              this.bookedDate.push(new Date(currentDate));  // Ajouter chaque date dans la plage
-              currentDate.setDate(currentDate.getDate() + 1);  // Passer au jour suivant
-            }
-          }
-        })
-        console.log(this.bookedDate);
-        
-      }).catch(error => {
-        console.error('Erreur lors de la récupération des réservations:', error);
-      });
-      
-    }
-    if (changes['price_per_night']) {
-      console.log('Price per night has changed:', this.price_per_night);
-      this.calculateTotalPrice();
-      this.reservationForm.get('totalPrice')?.setValue(this.totalPrice);
-      
-    }
-    if (changes['guests']) {
-      this.maxValue = this.guests;
+      if(this.id) {
+        this.apiService
+          .getPropertyReservation(this.id)
+          .then((reservation) => {
+            this.bookedDate = [];
+            reservation.forEach((res: any) => {
+              if (res.start_date && res.end_date) {
+                const startDate = new Date(res.start_date);
+                const endDate = new Date(res.end_date);
+    
+                // Ajouter la plage de dates réservées
+                let currentDate = startDate;
+                while (currentDate <= endDate) {
+                  this.bookedDate.push(new Date(currentDate));
+                  currentDate.setDate(currentDate.getDate() + 1);
+                }
+              }
+            });
+    
+            // Identifier la première date libre après aujourd'hui
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Remettre l'heure à minuit
+            const nextAvailableDate = this.getNextAvailableDate(today);
+    
+            // Mettre à jour minDate et startDate
+            this.minDate = nextAvailableDate || today;
+            this.minEndDate = new Date(this.minDate);
+            this.reservationForm.get('startDate')?.setValue(this.minDate);
+            this.campaignOne.get('start')?.setValue(this.minDate);
+            this.reservationForm.get('endDate')?.setValue(this.minEndDate);
+            this.campaignOne.get('end')?.setValue(this.minEndDate);
+    
+          })
+          .catch((error) => {
+            console.error('Erreur lors de la récupération des réservations:', error);
+          });
+      }
     }
   }
+
+  getNextAvailableDate(today: Date): Date | null {
+    let nextDate = new Date(today);
+  
+    while (true) {
+      const isBooked = this.bookedDate.some(
+        (booked) =>
+          booked.getFullYear() === nextDate.getFullYear() &&
+          booked.getMonth() === nextDate.getMonth() &&
+          booked.getDate() === nextDate.getDate()
+      );
+  
+      if (!isBooked) {
+        return nextDate; // La date est libre
+      }
+  
+      nextDate.setDate(nextDate.getDate() + 1); // Passer au jour suivant
+  
+      // Limite pour éviter une boucle infinie
+      if (nextDate.getFullYear() > today.getFullYear() + 1) {
+        return null; // Si aucune date n'est trouvée dans une année, retourner null
+      }
+    }
+  }
+  
+  
 
   reservationForm = new FormGroup({
     selectedGuests: new FormControl(this.minValue, [
@@ -189,7 +218,6 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
     if (!date) return;
 
     const startDate = this.campaignOne.get('start')?.value;
-    console.log(startDate);
     
     if (startDate && date < startDate) {
       alert('La date de fin ne peut pas être antérieure à la date de début.');
@@ -201,15 +229,26 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
     this.reservationForm.get('endDate')?.setValue(date);
     this.calculateTotalPrice();
   }
-
-  // Filtrer les dates pour empêcher la sélection de dates passées
+  
+  // Filtrer les dates pour empêcher la sélection de dates passées ou réservées
   filterDates = (date: Date | null): boolean => {
     if (!date) return false;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Remettre l'heure à minuit
-    return date >= today; // N'autorise que les dates égales ou postérieures à aujourd'hui
+
+    // Vérifiez si la date est dans le passé ou si elle est réservée
+    const isPast = date < today;
+    const isBooked = this.bookedDate.some(
+      (booked) =>
+        booked.getFullYear() === date.getFullYear() &&
+        booked.getMonth() === date.getMonth() &&
+        booked.getDate() === date.getDate()
+    );
+
+    return !isPast && !isBooked; // N'autorise que les dates valides
   };
+
   // Fonction pour valider la plage de dates
   validateDateRange(): void {
     const startDate = this.campaignOne.get('start')?.value;
@@ -233,7 +272,6 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
 
   async performBooking(): Promise<void> {
     if (this.userId) {
-      // console.log(this.reservationForm);
       
       if (this.reservationForm.valid) {
         const guestChoice = this.reservationForm.get('selectedGuests')?.value;
@@ -255,7 +293,6 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
           
           try {
             const response = await this.apiService.onPerformingBooking(this.id,formData)
-            console.log('Reservated');
           } catch (error) {
             console.log('Error', error);
           }
