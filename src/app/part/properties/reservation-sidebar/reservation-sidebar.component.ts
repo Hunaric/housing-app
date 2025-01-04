@@ -270,9 +270,9 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
     return Array.from({ length: this.guests }, (_, i) => i + 1);
   }
 
+  // After submitting the book form
   async performBooking(): Promise<void> {
     if (this.userId) {
-      
       if (this.reservationForm.valid) {
         const guestChoice = this.reservationForm.get('selectedGuests')?.value;
         const startChoice = this.reservationForm.get('startDate')?.value;
