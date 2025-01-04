@@ -19,7 +19,7 @@ export const routes: Routes = [
         title: 'Details Page'
     },
     {
-        path: 'landlord',
+        path: 'landlord/:id',
         component: LandlordComponent,
         title: 'Landlord Page',
     },

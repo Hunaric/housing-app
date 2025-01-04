@@ -27,11 +27,11 @@
 
             <hr />
 
-            <div class="py-6 flex items-center space-x-4">
+            <a class="py-6 flex items-center space-x-4 cursor-pointer" [routerLink]="['/landlord', property?.landlord?.id]">
                 <img src="images/profile_pic_1.jpg" alt="The user name" class="rounded-full" width="50" height="50">
 
                 <p><strong>{{ property?.landlord?.name ? property?.landlord?.name : property?.landlord?.email }}</strong> is your host</p>
-            </div>
+            </a>
 
             <hr />
 
