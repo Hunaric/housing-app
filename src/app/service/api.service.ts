@@ -240,4 +240,28 @@ export class ApiService {
     }
   }
 
+
+  // Landlord
+
+  async getLandlordInfo(landlordId: string) {
+    const url = `${this.apiUrl}/api/auth/${landlordId}/`;
+    const options = { 
+      method: 'GET', 
+      headers: { 
+        Accept: 'application/json',
+        'Content-Type': 'application/json', 
+      } 
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      return data;  
+    } catch (error) {
+      console.error(error);
+      throw error;      
+    }
+  }
+
+
 }
