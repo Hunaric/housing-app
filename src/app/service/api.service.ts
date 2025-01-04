@@ -188,4 +188,56 @@ export class ApiService {
     }
   }
 
+  // Reservations 
+
+  async onPerformingBooking(propertyId: string, formData: FormData): Promise<any> {
+    const url = `${this.apiUrl}/api/properties/${propertyId}/book/`;
+
+
+    try {  
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.accessToken}` // Ajout du token d'accès ici
+        },
+        body: formData,
+      };
+  
+      console.log('Envoi des données à l\'API avec fetch:', url, options);
+  
+      const response = await fetch(url, options);
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+      return await response.json();
+  
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi du formulaire:', error);
+      throw error;
+    }
+
+  }
+
+
+  async getPropertyReservation(propertyId: string) {
+    const url = `${this.apiUrl}/api/properties/${propertyId}/reservations/`;
+    const options = { 
+      method: 'GET', 
+      headers: { 
+        Accept: 'application/json',
+        'Content-Type': 'application/json', 
+      } 
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      return data;  
+    } catch (error) {
+      console.error(error);
+      throw error;      
+    }
+  }
+
 }

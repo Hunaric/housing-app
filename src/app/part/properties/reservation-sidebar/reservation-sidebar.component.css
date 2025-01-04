@@ -1,25 +1,41 @@
-/* Couleur de fond pour la date sélectionnée */
-.mat-calendar .mat-calendar-body .mat-calendar-body-cell-selected {
-  background-color: red !important; /* Couleur de fond pour la date sélectionnée */
-  color: orange !important; /* Couleur du texte pour la date sélectionnée */
+/* Styles pour les dates spécifiques */
+.start-date {
+  background-color: #4caf50 !important; /* Couleur pour la date de début */
+  color: white !important;
 }
 
-/* Couleur de fond pour la date d'aujourd'hui */
-.mat-calendar .mat-calendar-body .mat-calendar-body-cell-today {
-  border: 2px solid blue; /* Bordure pour la date d'aujourd'hui */
+.end-date {
+  background-color: #f44336 !important; /* Couleur pour la date de fin */
+  color: white !important;
 }
 
-/* Couleur de fond pour les dates dans la plage */
-.mat-calendar .mat-calendar-body .mat-calendar-body-cell-in-range {
-  background-color: lightblue !important; /* Couleur de fond pour les dates dans la plage */
+.range-date {
+  background-color: #2196F3 !important; /* Couleur pour les dates dans la plage */
+  color: white !important;
 }
 
-/* Couleur de fond au survol */
-.mat-calendar .mat-calendar-body .mat-calendar-body-cell:hover {
-  background-color: lightgray !important; /* Couleur de fond au survol */
+/* Styles pour le calendrier */
+.mat-calendar .mat-calendar-body-cell {
+  border-radius: 50%; /* Arrondir les coins des cellules */
 }
 
-/* Couleur de texte pour les dates désactivées */
-.mat-calendar .mat-calendar-body .mat-calendar-body-cell-disabled {
-  color: #ccc; /* Couleur du texte pour les dates désactivées */
+/* Appliquer un style aux cellules de date */
+.mat-calendar .start-date,
+.mat-calendar .end-date,
+.mat-calendar .range-date {
+  border-radius: 50%; /* Arrondir les coins des cellules */
+  color: white; /* Couleur du texte */
+}
+
+/* Optionnel : ajouter un effet de survol */
+.mat-calendar .start-date:hover,
+.mat-calendar .end-date:hover,
+.mat-calendar .range-date:hover {
+  opacity: 0.8; /* Effet de survol */
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
 }

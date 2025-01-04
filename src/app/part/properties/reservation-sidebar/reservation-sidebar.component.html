@@ -1,50 +1,56 @@
 <aside class="mt-6 p-6 col-span-2 rounded-xl border border-gray-300 shadow-xl">
   <h2 class="mb-2 text-2xl">${{ price_per_night }} per night</h2>
+  <form [formGroup]="reservationForm">
 
-  <!-- DatePicker -->
-  <div class="w-full flex flex-col justify-center items-center gap-8 py-3">
-    <mat-form-field appearance="fill">
-      <mat-label>Start Date</mat-label>
-      <input matInput [matDatepicker]="startPicker" (dateChange)="onDateSelected($event.value)">
-      <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-      <mat-datepicker #startPicker></mat-datepicker>
-      <mat-hint>mm / dd / yyyy</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>End Date</mat-label>
-      <input matInput [matDatepicker]="endPicker" (dateChange)="onDateSelected($event.value)">
-      <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-      <mat-datepicker #endPicker></mat-datepicker>
-      <mat-hint>mm / dd / yyyy</mat-hint>
-    </mat-form-field>
-
-    <p>
-      <span [ngClass]="{'start-date': campaignOne.get('start')?.value}">
-        Start Date: {{ campaignOne.get('start')?.value | date: 'dd/MM/yyyy' }}
-      </span>
-      <span [ngClass]="{'end-date': campaignOne.get('end')?.value}">
-        End Date: {{ campaignOne.get('end')?.value | date: 'dd/MM/yyyy' }}
-      </span>
-    </p>
-
-    <div *ngIf="campaignOne.errors?.['invalidDateRange']">
-      <p class="error-text">La date de fin doit être postérieure à la date de début.</p>
-    </div>
-  </div>
-
-  <!-- Sélection des invités -->
-  <div class="mb-6 p-3 border border-gray-400 rounded-xl">
-    <label for="guests" class="mb-2 block font-bold text-xs">Guests</label>
-    <select class="w-full -ml-1 text-xs" name="guests" id="guests">
-      <option *ngFor="let guest of getGuestsArray()" [value]="guest">
-        {{ guest }}
-      </option>
-    </select>
-  </div>
+    <!-- DatePicker -->
+    <div class="w-full flex flex-col justify-center items-center gap-8 py-3">
+      <mat-form-field appearance="fill">
+        <mat-label>Date de début</mat-label>
+        <input matInput [matDatepicker]="startPicker" (dateChange)="onStartDateSelected($event.value)" [min]="minDate" [max]="maxDate" formControlName="startDate">
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+        <mat-hint>yyyy / MM / dd</mat-hint>
+      </mat-form-field>
+    
+      <mat-form-field appearance="fill">
+        <mat-label>Date de fin</mat-label>
+        <input matInput [matDatepicker]="endPicker" (dateChange)="onEndDateSelected($event.value)" [min]="minEndDate" [max]="maxEndDate" formControlName="endDate">
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+        <mat-hint>yyyy / MM / dd</mat-hint>
+      </mat-form-field>
+    
+        <p class="flex flex-col justify-center">
+          <span>
+            Start Date: {{ campaignOne.get('start')?.value | date: 'yyyy/MM/dd' }}
+          </span> <br>
+          <span>
+            End Date: {{ campaignOne.get('end')?.value | date: 'yyyy/MM/dd' }}
+          </span>
+        </p>
+    
+        <div *ngIf="campaignOne.hasError('invalidDateRange')" class="error-message">
+          La date de fin doit être postérieure à la date de début.
+        </div>
+        
+        <div *ngIf="campaignOne.errors?.['invalidDateRange']">
+          <p class="error-text">La date de fin doit être postérieure à la date de début.</p>
+        </div>
+      </div>
+    <form [formGroup]="reservationForm"></form>
+      <!-- Sélection des invités -->
+      <div class="mb-6 p-3 border border-gray-400 rounded-xl">
+        <label for="guests" class="mb-2 block font-bold text-xs">Guests</label>
+        <select class="w-full -ml-1 text-xs" name="guests" id="guests" formControlName="selectedGuests">
+          <option *ngFor="let guest of getGuestsArray()" [value]="guest">
+            {{ guest }}
+          </option>
+        </select>
+      </div>
+  </form>
 
   <!-- Bouton de réservation -->
-  <div class="w-full mb-6 py-6 text-center text-white bg-airbnb hover:bg-airbnb-dark rounded-xl">
+  <div class="w-full mb-6 py-6 text-center text-white bg-airbnb hover:bg-airbnb-dark rounded-xl cursor-pointer" (click)="performBooking()">
     Book
   </div>
 
@@ -55,7 +61,7 @@
   </div>
   <div class="mb-4 flex justify-between items-center">
     <p>DjangoBnb fee</p>
-    <p>$40</p>
+    <p>${{ fee }}</p>
   </div>
   <hr />
 
