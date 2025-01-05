@@ -1,4 +1,4 @@
-import { Landlord } from "./user";
+import { Landlord, User } from "./user";
 
 export interface Properties {
     data: Property[],
@@ -33,5 +33,21 @@ export interface PropertyImage {
     property: string,     // ID de la propriété associée
     image_url: string,    // URL de l'image
     created_at: string,   // Date de création de l'image (format ISO 8601)
+}
+
+export interface Reservation {
+    id: string,
+    property:PropertyDetail,
+    start_date: string,
+    end_date: string,
+    number_of_nights: number,
+    guests: number,
+    total_price: number,
+    created_by: User,
+    created_at: string,
+}
+
+export interface ReservationList {
+    data: Reservation[],
 }
   

@@ -3,41 +3,27 @@
 
     <div class="space-y-4">
 
-        <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-md border border-gray-300 rounded-xl">
+        <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-md border border-gray-300 rounded-xl" *ngFor="let reservation of reservations">
             <div class="col-span-1">
                 <div class="relative overflow-hidden aspect-square rounded-xl">
-                    <img src="images/beach_1.jpg" class="hover:scale-110 object-cover transition h-full w-full" alt="Beach house">
+                    <img src="{{ reservation.property.image_url }}" class="hover:scale-110 object-cover transition h-full w-full" alt="Beach house">
                 </div>
             </div>
 
             <div class="col-span-1 md:col-span-3">
-                <h2 class="mb-4 text-xl">Property name</h2>
-                <p class="mb-2"><strong>Check in date:</strong> 16/11/2024</p>
-                <p class="mb-2"><strong>Check out date:</strong> 18/11/2024</p>
+                <h2 class="mb-4 text-xl">{{ reservation.property.title }}</h2>
+                <p class="mb-2"><strong>Check in date:</strong> {{ reservation.start_date | date: 'yyyy/MM/dd' }}</p>
+                <p class="mb-2"><strong>Check out date:</strong> {{ reservation.end_date | date: 'yyyy/MM/dd' }}</p>
 
-                <p class="mb-2"><strong>Nomber of nights:</strong> 2</p>
-                <p class="mb-2"><strong>Total price:</strong> $200</p>
+                <p class="mb-2"><strong>Nomber of nights:</strong> {{ reservation.number_of_nights }}</p>
+                <p class="mb-2"><strong>Total price:</strong> ${{ reservation.total_price }}</p>
                 
-                <div class="mt-6 inline-block cursor-pointer py-4 px-6 bg-airbnb text-white rounded-xl">Go to property</div>
-            </div>
-        </div>
-
-        <div class="p-5 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-md border border-gray-300 rounded-xl">
-            <div class="col-span-1">
-                <div class="relative overflow-hidden aspect-square rounded-xl">
-                    <img src="images/beach_1.jpg" class="hover:scale-110 object-cover transition h-full w-full" alt="Beach house">
-                </div>
-            </div>
-
-            <div class="col-span-1 md:col-span-3">
-                <h2 class="mb-4 text-xl">Property name</h2>
-                <p class="mb-2"><strong>Check in date:</strong> 16/11/2024</p>
-                <p class="mb-2"><strong>Check out date:</strong> 18/11/2024</p>
-
-                <p class="mb-2"><strong>Nomber of nights:</strong> 2</p>
-                <p class="mb-2"><strong>Total price:</strong> $200</p>
-
-                <div class="mt-6 inline-block cursor-pointer py-4 px-6 bg-airbnb text-white rounded-xl">Go to property</div>
+                <a 
+                    class="mt-6 inline-block cursor-pointer py-4 px-6 bg-airbnb text-white rounded-xl"
+                    [routerLink]="['/details', reservation.property.id]"
+                >
+                    Go to property
+                </a>
             </div>
         </div>
 

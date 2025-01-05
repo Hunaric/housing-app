@@ -36,6 +36,10 @@
   >
     <ng-container *ngIf="userId; else guestLinks">
       
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" [routerLink]="['reservation']" (click)="closeUserNav()"> 
+        My reservations
+      </div>
+      
       <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" [routerLink]="['my-properties']" (click)="closeUserNav()"> 
         My properties
       </div>

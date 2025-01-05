@@ -18,8 +18,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { ApiService } from '../../../service/api.service';
-import { ModalService } from '../../../service/modal.service';
+import { ModalService, SuccessMessageService } from '../../../service/modal.service';
 import { LoginModalComponent } from '../../modal-content/login-modal/login-modal.component';
+import { SuccessMessageComponent } from '../../notification/success-message/success-message.component';
 
 @Component({
   selector: 'app-reservation-sidebar',
@@ -73,7 +74,7 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
 
   fee = this.minValue;
 
-  constructor (private apiService: ApiService, private modalService: ModalService) {}
+  constructor (private apiService: ApiService, private modalService: ModalService, private successMessageService: SuccessMessageService) {}
 
   ngOnInit(): void {
   }
@@ -113,6 +114,7 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
             this.campaignOne.get('start')?.setValue(this.minDate);
             this.reservationForm.get('endDate')?.setValue(this.minEndDate);
             this.campaignOne.get('end')?.setValue(this.minEndDate);
+            this.calculateTotalPrice();
     
           })
           .catch((error) => {
@@ -273,13 +275,24 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
   // After submitting the book form
   async performBooking(): Promise<void> {
     if (this.userId) {
-      if (this.reservationForm.valid) {
-        const guestChoice = this.reservationForm.get('selectedGuests')?.value;
-        const startChoice = this.reservationForm.get('startDate')?.value;
-        const endChoice = this.reservationForm.get('endDate')?.value;
-        const priceChoice = this.totalPrice;
-        const nightsChoice = this.nights;
+      // Affichage d'une boîte de confirmation avant de procéder à la réservation
+      const confirmation = confirm('Are you sure you want to book this reservation?');
+    
+      
+      if (confirmation) {
+      
+      const guestChoice = this.reservationForm.get('selectedGuests')?.value;
+      const startChoice = this.reservationForm.get('startDate')?.value;
+      const endChoice = this.reservationForm.get('endDate')?.value;
+      const priceChoice = this.totalPrice;
+      const nightsChoice = this.nights;
 
+      console.log('guest:', guestChoice);
+      console.log('start:', startChoice);
+      console.log('end:', endChoice);
+      console.log('fee:', this.fee);
+      console.log('price:', priceChoice);
+      console.log('nights:', nightsChoice);
         if (guestChoice && startChoice && endChoice && priceChoice && nightsChoice) {
           const formattedStartDate = formatDate(startChoice, 'yyyy-MM-dd', 'en-US');
           const formattedEndDate = formatDate(endChoice, 'yyyy-MM-dd', 'en-US');
@@ -291,12 +304,19 @@ export class ReservationSidebarComponent implements OnInit, OnChanges{
           formData.append('number_of_nights', nightsChoice.toString());
           formData.append('total_price', priceChoice.toString());
           
+          // console.log('ici');
+          
           try {
-            const response = await this.apiService.onPerformingBooking(this.id,formData)
+            const response = await this.apiService.onPerformingBooking(this.id,formData);
+            // Afficher le message de succès et ouvrir le modal
+            this.successMessageService.showSuccessMessage('Reservation submitted successfully!');
+            this.modalService.open('Success', SuccessMessageComponent);
           } catch (error) {
             console.log('Error', error);
           }
         }
+      } else {
+        return;
       }
     } else {
       this.modalService.open('Log in', LoginModalComponent);  // Passez le composant ici
