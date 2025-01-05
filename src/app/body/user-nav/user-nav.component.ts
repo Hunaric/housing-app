@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { ModalService } from '../../service/modal.service';
 import { LoginModalComponent } from '../../part/modal-content/login-modal/login-modal.component';
 import { SignupModalComponent } from '../../part/modal-content/signup-modal/signup-modal.component';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 
 @Component({
     selector: 'app-user-nav',
-    imports: [CommonModule],
+    imports: [CommonModule, RouterModule],
     templateUrl: './user-nav.component.html',
     styleUrl: './user-nav.component.css'
 })
@@ -18,6 +18,10 @@ export class UserNavComponent {
 
   toogleUserNavIsOpen() {
     this.userNavIsOpen = !this.userNavIsOpen;
+  }
+
+  closeUserNav() {
+    this.userNavIsOpen = false;  // Ferme le menu
   }
 
   constructor(private modalService: ModalService, private router: Router, private apiService: ApiService) {

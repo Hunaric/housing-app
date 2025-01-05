@@ -1,4 +1,4 @@
-import { Component, input, Input, signal } from '@angular/core';
+import { Component, input, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { ItemsComponent } from '../items/items.component';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../service/api.service';
@@ -10,31 +10,36 @@ import { Properties, Property } from '../../../interfaces/properties';
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.css']
 })
-export class PropertiesComponent {
+export class PropertiesComponent implements OnChanges{
   // Définition du signal avec une valeur initiale vide
   property = signal<Property[]>([]);
 
   // @Input() gridClasses!: string;
   gridClasses = input<string>();
+  // @Input() landlordId?: string;
+  landlordId = input<string>();
 
   constructor(private apiService: ApiService) {
-    this.apiService
-      .getAllHouses()
+    this.loadProperties();
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['landlordId']) {
+      this.loadProperties({landlord_id: this.landlordId()});
+    }
+  }
+
+  loadProperties(filters: {landlord_id?: string, [key: string]: any} = {}) {
+    this.apiService.getAllHouses(filters)
       .then((properties: Properties) => {
         console.log('Properties received:', properties);
-        this.property.set(properties.data);  // Met à jour la valeur du signal
-        console.log('Property array:', this.property()); // Log supplémentaire
-        console.log(this.property().map(p => p.image_url));
-      });
-    /* this.apiService.getHouses().subscribe({
-        next: (properties: Properties) => {
-          this.property.set(properties.data);
-          console.log('Properties received:', properties);
-        }, 
-        error: (err) => {
-          console.log('Error during properties');
-          
-        }
-      }); */
+        this.property.set(properties.data);
+        console.log('Property array:', this.property());        
+      })
+      .catch((error) => {
+        console.error('Error fetching properties:', error);
+      })
   }
+  
 }

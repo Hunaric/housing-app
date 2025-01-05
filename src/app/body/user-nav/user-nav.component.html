@@ -36,16 +36,20 @@
   >
     <ng-container *ngIf="userId; else guestLinks">
       
-      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="logout()">
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" [routerLink]="['my-properties']" (click)="closeUserNav()"> 
+        My properties
+      </div>
+      
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="logout()" (click)="closeUserNav()">
         Log out
       </div>
     </ng-container>
 
     <ng-template #guestLinks>
-      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="openLoginModal()">
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="openLoginModal()" (click)="closeUserNav()">
         Log in
       </div>
-      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="openSignupModal()">
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="openSignupModal()" (click)="closeUserNav()">
         Sign up
       </div>
     </ng-template>

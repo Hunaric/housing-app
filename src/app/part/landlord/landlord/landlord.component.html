@@ -3,8 +3,8 @@
         <!-- Section Aside -->
         <aside class="col-span-1 mb-4 h-auto">
             <div class="flex flex-col items-center p-6 rounded-xl border border-gray-300 shadow-xl">
-                <img src="images/profile_pic_1.jpg" alt="Landlord name" width="200" height="200" class="rounded-full">
-                <h1 class="mt-6 text-2xl">{{ landlord?.email }} name</h1>
+                <img src="{{ landlord?.avatar_url }}" alt="Landlord name" width="200" height="200" class="rounded-full">
+                <h1 class="mt-6 text-2xl">{{ landlord?.email }}</h1>
                 <div class="mt-6 cursor-pointer py-4 px-6 bg-airbnb hover:bg-airbnb-dark transition text-white rounded-xl">
                     Contact
                 </div>
@@ -12,7 +12,11 @@
         </aside>
         <!-- Section Main -->
         <div class="col-span-1 md:col-span-3 pl-0 md:pl-6 h-full">
-            <app-properties gridClasses="grid grid-cols-1 md:grid-cols-3 gap-6"></app-properties>
+            <app-properties 
+                gridClasses="grid grid-cols-1 md:grid-cols-3 gap-6"
+                landlordId="{{ landlord?.id }}"
+            >
+            </app-properties>
         </div>
     </div>
 </div>
