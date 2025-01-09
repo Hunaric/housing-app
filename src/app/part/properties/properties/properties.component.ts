@@ -30,16 +30,29 @@ export class PropertiesComponent implements OnChanges{
     }
   }
 
-  loadProperties(filters: {landlord_id?: string, [key: string]: any} = {}) {
+  // loadProperties(filters: {landlord_id?: string, [key: string]: any} = {}) {
+  //   this.apiService.getAllHouses(filters)
+  //     .then((properties: Properties) => {
+  //       console.log('Properties received:', properties);
+  //       this.property.set(properties.data);
+  //       console.log('Property array:', this.property());        
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching properties:', error);
+  //     })
+  // }
+
+  loadProperties(filters: { landlord_id?: string, [key: string]: any } = {}) {
     this.apiService.getAllHouses(filters)
       .then((properties: Properties) => {
         console.log('Properties received:', properties);
         this.property.set(properties.data);
-        console.log('Property array:', this.property());        
       })
       .catch((error) => {
         console.error('Error fetching properties:', error);
-      })
+      });
   }
   
+
+
 }

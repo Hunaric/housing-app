@@ -175,7 +175,7 @@ export class ApiService {
             formData.append('additionnal_images[]', file); // Utilisez 'additionnal_images[]' ici
         });
         console.log('Service formData for additionnal images:', formData);
-      } else if (propertyForm.controls[field].value) {
+      } else if (field !== 'favorited' && propertyForm.controls[field].value) {
           formData.append(field, propertyForm.controls[field].value);
       }
     }
@@ -203,6 +203,36 @@ export class ApiService {
       throw error;
     }
   }
+
+
+  async toggleFavorite(propertyId: string): Promise<any> {
+    const url = `${this.apiUrl}/api/properties/${propertyId}/toggle_favorite/`;
+
+
+    try {  
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.accessToken}` // Ajout du token d'accès ici
+        },
+      };
+  
+      console.log('Envoi des données à l\'API avec fetch:', url, options);
+  
+      const response = await fetch(url, options);
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+      return await response.json();
+  
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi du formulaire:', error);
+      throw error;
+    }
+
+  }
+
 
   // Reservations 
 

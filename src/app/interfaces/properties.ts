@@ -9,6 +9,7 @@ export interface Property {
     title: string,
     price_per_night: number,
     image_url: string,
+    favorited: string[],
 }
 
 export interface PropertyDetail {
@@ -22,6 +23,7 @@ export interface PropertyDetail {
     country: string,       // Pays
     country_code: string,  // Code du pays
     category: string,      // Catégorie
+    // favorited: boolean,
     image_url: string,     // URL de l'image principale
     landlord: Landlord,
     created_at: string,    // Date de création de la propriété (format ISO 8601)
