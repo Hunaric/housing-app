@@ -15,10 +15,13 @@ export class ItemsComponent {
   @Input() image_url!: string;
   @Input() title!: string;
   @Input() price_per_night!: number;
-  @Input() isFavorite: boolean = false;
+  @Input() isFavorite!: boolean ;
   @Output() favoriteToggle = new EventEmitter<boolean>();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {
+    console.log(this.id);
+    
+  }
 
 
   async toggleFavorite(event: MouseEvent) {
