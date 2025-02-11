@@ -44,6 +44,10 @@
         My properties
       </div>
       
+      <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" [routerLink]="['my-favorites']" (click)="closeUserNav()"> 
+        My favorites
+      </div>
+      
       <div class="px-5 py-4 cursor-pointer hover:bg-gray-100 transition" (click)="logout()" (click)="closeUserNav()">
         Log out
       </div>

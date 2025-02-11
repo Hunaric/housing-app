@@ -6,6 +6,7 @@ import { ReservationComponent } from './part/reservation/reservation/reservation
 import { MypropertiesComponent } from './part/properties/myproperties/myproperties.component';
 import { InboxComponent } from './chat/inbox/inbox.component';
 import { DetailsComponent as ChatDetailsComponents } from './chat/details/details.component';
+import { FavoritedComponent } from './part/properties/favorited/favorited.component';
 
 export const routes: Routes = [
     {
@@ -27,6 +28,11 @@ export const routes: Routes = [
         path: 'my-properties',
         component: MypropertiesComponent,
         title: 'My Properties Page'
+    },
+    {
+        path: 'my-favorites',
+        component: FavoritedComponent,
+        title: 'My Favorites Page'
     },
     {
         path: 'reservation',

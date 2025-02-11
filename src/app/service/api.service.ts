@@ -92,13 +92,13 @@ export class ApiService {
   
   // Properties
 
-  async getAllHouses(filters: { landlord_id?: string, favorited?: string, [key: string]: any } = {}) {
+  async getAllHouses(filters: { landlord_id?: string, is_favorite?: string, [key: string]: any } = {}) {
     let url = `${this.apiUrl}/api/properties/`;
 
     if (filters.landlord_id) {
       url += `?landlord_id=${encodeURIComponent(filters.landlord_id)}`;
-    } else if (filters.favorited) {
-      url += `?favorited==true`;
+    } else if (filters.is_favorite) {
+      url += `?is_favorite=true`;
     } else {
     // Construire les autres filtres dynamiquement
     const queryString = Object.entries(filters)

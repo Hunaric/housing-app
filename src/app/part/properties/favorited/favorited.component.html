@@ -1,1 +1,16 @@
-<p>favorited works!</p>
+<div [ngClass]="gridClasses()" *ngIf="property.length > 0; else noFavorites">
+    <app-items 
+      *ngFor="let item of property"
+      [id]="item.id"
+      [image_url]="item.image_url"
+      [title]="item.title"
+      [price_per_night]="item.price_per_night"
+      [isFavorite]="item.isFavorited"
+      >
+      <!-- [favorited]="item.favorited" -->
+    </app-items>
+</div>
+
+<ng-template #noFavorites>
+  <p class="text-center text-gray-500">Vous n'avez aucun favori pour le moment.</p>
+</ng-template>
