@@ -1,4 +1,4 @@
-<div [ngClass]="gridClasses()">
+<div [ngClass]="gridClasses()" *ngIf="property().length > 0; else noData">
   <app-items 
     *ngFor="let item of property()"
     [id]="item.id"
@@ -10,3 +10,7 @@
     <!-- [favorited]="item.favorited" -->
   </app-items>
 </div>
+
+<ng-template #noData>
+  <p class="text-center text-gray-500">Nothing to show</p>
+</ng-template>

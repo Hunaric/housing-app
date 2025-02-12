@@ -1,6 +1,10 @@
-<main class="max-w-full flex flex-col mx-auto px-6 pb-6 space-y-4">
+<main class="max-w-full flex flex-col mx-auto px-6 pb-6 space-y-4" *ngIf="userId; else noUser">
     <h1 class="my-6 text-2xl">Inbox</h1>
     <app-conversation></app-conversation>
     <app-conversation></app-conversation>
     <app-conversation></app-conversation>
 </main>
+
+<ng-template #noUser>
+  <p class="text-center text-gray-500">You must log in</p>
+</ng-template>

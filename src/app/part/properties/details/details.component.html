@@ -25,6 +25,10 @@
                 {{ property?.guests }} guests - {{ property?.bedrooms }} bedrooms - {{ property?.bathrooms }} bathroom
             </span>
 
+            <span class="mb-6 block text-lg text-gray-600">
+                Place: {{ formatLocation(property?.country ?? '') }} 
+            </span>
+
             <hr />
 
             <a class="py-6 flex items-center space-x-4 cursor-pointer" [routerLink]="['/landlord', property?.landlord?.id]">
