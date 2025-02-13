@@ -16,7 +16,8 @@ export interface Message {
     id?: string,
     name: string,
     body: string,
-    conversationId: string,
-    sent_to: UserType,
+    conversation_id: string,
+    sent_to_id: string,
     created_by: UserType,
+    // created_at: string,
 }
