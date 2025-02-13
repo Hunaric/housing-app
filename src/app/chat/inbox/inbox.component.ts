@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ConversationComponent } from '../conversation/conversation.component';
 import { ApiService } from '../../service/api.service';
 import { CommonModule } from '@angular/common';
+import { Conversation, Conversations } from '../../interfaces/chat';
 
 @Component({
     selector: 'app-inbox',
@@ -11,14 +12,21 @@ import { CommonModule } from '@angular/common';
 })
 export class InboxComponent {
     userId: string | null = localStorage.getItem('userId');
-    
+    conversation: Conversation[] = [];
 
     constructor(private apiService: ApiService) {
-        
+        this.loadConversations();
     }
     
-    loadProperties() {
+    loadConversations() {
     this.apiService.getConversations()
+        .then((conversations: Conversations) => {
+            console.log('conv:', conversations);
+            this.conversation = conversations.data.map(conversation => ({
+                ...conversation
+            })
+        );
+        })
         .catch((error) => {
         console.error('Error fetching properties:', error);
         });

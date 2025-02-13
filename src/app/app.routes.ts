@@ -45,7 +45,7 @@ export const routes: Routes = [
         title: 'Inbox Page',
     },
     {
-        path: 'inbox-details',
+        path: 'inbox-details/:id',
         component: ChatDetailsComponents,
         title: 'Conversation Page'
     },
