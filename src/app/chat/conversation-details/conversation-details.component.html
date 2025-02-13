@@ -1,24 +1,25 @@
-<div>
-  <div class="max-h-[400px] overflow-auto flex flex-col space-y-4">
+<div class="w-full h-screen flex flex-col" *ngIf="userId; else noUser">
+
+  <div class="flex-grow max-h-[calc(100vh-80px)] overflow-auto space-y-4">
     <div class="w-[80%] px-4 py-6 rounded-xl bg-gray-200">
-      <p class="font-bold text-gray-500">John Doe</p>
+      <p class="font-bold text-gray-500">{{ otherUser?.email }}</p>
 
       <p>hhji joiji joj jk okk kpo ojh8yt</p>
     </div>
 
     <div class="w-[80%] ml-[20%] px-4 py-6 rounded-xl bg-blue-200">
-      <p class="font-bold text-gray-500">Jane Doe</p>
+      <p class="font-bold text-gray-500">{{ myUser?.email }}</p>
 
       <p>hhji joiji joj jk okk kpo ojh8yt</p>
     </div>
   </div>
 
-  <div class="mt-4 py-4 px-6 flex border border-gray-300 space-x-4 rounded-xl">
-    <input
+  <div class="fixed bottom-0 left-0 w-full mt-4 py-4 px-6 flex border-t border-gray-300 space-x-4 rounded-xl">
+    <textarea
       type="text"
       placeholder="Type your message..."
       class="w-full p-2 bg-gray-200 rounded-xl"
-    />
+    ></textarea>
 
     <div
       (click)="clickButton()"
@@ -28,3 +29,8 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #noUser>
+  <p class="text-center text-gray-500">You must log in</p>
+</ng-template>

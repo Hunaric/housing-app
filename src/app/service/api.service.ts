@@ -356,5 +356,26 @@ async getConversations() {
   }
 }
 
+async getConversationBetweenTwoUsers(conversationId: string) {
+  const url = `${this.apiUrl}/api/chat/${conversationId}/`;
+  const options = { 
+    method: 'GET', 
+    headers: { 
+      Accept: 'application/json',
+      'Content-Type': 'application/json', 
+      Authorization: `Bearer ${this.accessToken}` // Ajout du token d'accès ici
+    } 
+  };
+
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;  
+  } catch (error) {
+    console.error(error);
+    throw error;      
+  }
+}
+
 
 }

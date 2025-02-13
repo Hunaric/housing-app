@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Conversation } from '../../interfaces/chat';
 import { CommonModule } from '@angular/common';
-import { Landlord } from '../../interfaces/user';
+import { UserType } from '../../interfaces/user';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -15,7 +15,7 @@ export class ConversationComponent {
     @Input() userId!: string;
     @Input() conversation!: Conversation;
 
-    getOtherUser(): Landlord | undefined {
+    getOtherUser(): UserType | undefined {
         return this.conversation.users.find(user => user.id !== this.userId);
     }
 

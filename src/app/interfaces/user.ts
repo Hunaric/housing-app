@@ -16,3 +16,10 @@ export interface Landlord {
     email: string,             // Nom de l'utilisateur
     avatar_url: string,       // URL de l'avatar (optionnel)
 }
+
+export interface UserType {
+    id: string,               // UUID de l'utilisateur
+    name: string,             // Nom de l'utilisateur
+    email: string,             // Nom de l'utilisateur
+    avatar_url: string,       // URL de l'avatar (optionnel)
+}
