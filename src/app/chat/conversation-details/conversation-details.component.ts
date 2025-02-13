@@ -33,7 +33,7 @@ export class ConversationDetailsComponent implements OnChanges{
       this.myUser = this.conversation.users.find(user => user.id === this.userId);
 
       if (this.conversation.id) {
-        
+        // this.websocketService.connect(this.conversation.id)
       }
     }
     

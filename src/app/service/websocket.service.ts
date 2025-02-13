@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Message } from '../interfaces/chat';
+import { environment } from '../../environment/environment';
 
 
 
@@ -9,16 +10,18 @@ import { Message } from '../interfaces/chat';
   providedIn: 'root'
 })
 export class WebsocketService {
+  private wsUrl = environment.WS_HOST
 
   constructor() { }
 
+  private accessToken = localStorage.getItem('tokenAccess');
   private socket$: WebSocketSubject<any> | null = null;
   private messageSubject = new BehaviorSubject<Message[]>([]);
   messages$ = this.messageSubject.asObservable();
 
-  connect(conversationId: string, token: string) {
+  connect(conversationId: string) {
     if (!this.socket$ || this.socket$.closed) {
-      this.socket$ = webSocket(`${process.env['NEXT_PUBLIC_WS_HOST']}/ws/${conversationId}/?token=${token}`);
+      this.socket$ = webSocket(`${this.wsUrl}/ws/${conversationId}/?token=${this.accessToken}`);
 
       this.socket$.subscribe({
         next: (message) => {
