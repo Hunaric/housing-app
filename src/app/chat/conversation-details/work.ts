@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './conversation-details.component.html',
     styleUrls: ['./conversation-details.component.css']
 })
-export class ConversationDetailsComponent implements OnDestroy, OnInit {
+export class ConversationDetailsComponent implements OnChanges, OnDestroy, OnInit {
   @Input() conversation!: Conversation;
   userId: string | null = localStorage.getItem('userId');
   
@@ -33,30 +33,30 @@ export class ConversationDetailsComponent implements OnDestroy, OnInit {
       this.otherUser = this.conversation.users.find(user => user.id !== this.userId);
       this.myUser = this.conversation.users.find(user => user.id === this.userId);
 
-      console.log('uuid:', this.otherUser);
-      
       // Charger les anciens messages au début
       this.loadMessages();
-      
-      // Connect to WebSocket and subscribe to messages
-      this.connectToWebSocket();
     }
   }
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['conversation'] && this.conversation) {
-  //     this.otherUser = this.conversation.users.find(user => user.id !== this.userId);
-  //     this.myUser = this.conversation.users.find(user => user.id === this.userId);
-    
-  //     // Connect to WebSocket only if not already connected
-  //     if (!this.isWebSocketConnected) {
-  //       this.loadMessages(); // Recharger les messages lors de la réception d'une nouvelle conversation
-  //       this.connectToWebSocket();
-  //     console.log('Chill');
-        
-  //     }
-  //   }
-  // }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['conversation'] && this.conversation) {
+      this.otherUser = this.conversation.users.find(user => user.id !== this.userId);
+      this.myUser = this.conversation.users.find(user => user.id === this.userId);
+      this.loadMessages(); // Recharger les messages lors de la réception d'une nouvelle conversation
+      
+
+      // Connecter le WebSocket pour les messages en temps réel
+      if (this.conversation.id) {
+        this.websocketService.connect(this.conversation.id);
+
+        // Souscrire aux messages en temps réel
+        this.subscription = this.websocketService.messages$.subscribe(messages => {
+          this.realtimeMessages = messages;
+          this.scrollToBottom(); // Faire défiler vers le bas lorsqu'un nouveau message arrive
+        });
+      }
+    }
+  }
 
   // Méthode pour charger les anciens messages
   loadMessages() {
@@ -65,14 +65,13 @@ export class ConversationDetailsComponent implements OnDestroy, OnInit {
     // Appelez l'API pour récupérer les messages (par exemple, les 10 derniers)
     this.apiService.getConversationBetweenTwoUsers(conversationId).then((response) => {
       this.realtimeMessages = response.messages; // Assume that the response contains the 'messages' data
-      console.log('rel mess:', this.realtimeMessages);
-      
       this.scrollToBottom();
     });
   }
 
   sendMessage() {
     const messageBody = this.newMessage.value?.trim();
+    console.log('mess1', messageBody);
     
     if (messageBody && this.otherUser) {
       const newMessage = {
@@ -100,31 +99,64 @@ export class ConversationDetailsComponent implements OnDestroy, OnInit {
     }, 100);
   }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+  private connectToWebSocket() {
+      if (this.conversation.id) {
+        this.websocketService.connect(this.conversation.id);
+    
+        // Subscribe to real-time messages
+        this.subscription = this.websocketService.messages$.subscribe(newMessage => {
+          if (newMessage) {
+            console.log('Here');
+    
+            // Check if newMessage is an array or a single object
+            if (Array.isArray(newMessage)) {
+              // If it's an array, push each message into the realtimeMessages
+              this.realtimeMessages.push(...newMessage);
+              console.log('Array');
+          } else {
+              // If it's a single message, push it directly
+              this.realtimeMessages.push(newMessage);
+              console.log('Single');
+            }
+    
+            console.log('Updated messages after receiving:', this.realtimeMessages);
+            this.scrollToBottom(); // Scroll down when a new message arrives
+          }
+        });
+      }
+    }
+
+
 
   // Function to connect to WebSocket and subscribe to messages
-  private connectToWebSocket() {
+  private connectToWebSocketNotWorking() {
     if (this.conversation.id) {
       this.websocketService.connect(this.conversation.id);
   
       // Subscribe to real-time messages
-      this.subscription = this.websocketService.messages$.subscribe(newMessage => {
+      this.subscription = this.websocketService.messages$.subscribe((newMessage: Message | Message[]) => {
         if (newMessage) {
           console.log('Here');
   
           // Check if newMessage is an array or a single object
           if (Array.isArray(newMessage)) {
-            
-          // If it's an array, push only the last message into the realtimeMessages
-          const lastMessage = newMessage[newMessage.length - 1]; // Get the last message
-          console.log('Array mess', lastMessage);
-          if (lastMessage) {
-            this.realtimeMessages.push(lastMessage); // Push the last message if it doesn't already exist
+            // If it's an array, push each message into the realtimeMessages
+            newMessage.forEach((msg: Message) => {
+              // Check if the message has an id before checking for duplicates
+              if (msg.id && !this.realtimeMessages.some(existingMsg => existingMsg.id === msg.id)) {
+                this.realtimeMessages.push(msg);
+              }
+            });
             console.log('Array');
-          }
-        } else {
-            // If it's a single message, push it directly
-            this.realtimeMessages.push(newMessage);
-            console.log('Array');
+          } else {
+            // If it's a single message, push it directly if it doesn't already exist
+            if (newMessage.id && !this.realtimeMessages.some(existingMsg => existingMsg.id === newMessage.id)) {
+              this.realtimeMessages.push(newMessage);
+              console.log('Single');
+            }
           }
   
           console.log('Updated messages after receiving:', this.realtimeMessages);
@@ -133,8 +165,6 @@ export class ConversationDetailsComponent implements OnDestroy, OnInit {
       });
     }
   }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
 }
+
+

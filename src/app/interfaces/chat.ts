@@ -19,5 +19,4 @@ export interface Message {
     conversation_id: string,
     sent_to_id: string,
     created_by: UserType,
-    // created_at: string,
 }

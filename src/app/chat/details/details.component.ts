@@ -3,10 +3,11 @@ import { ConversationDetailsComponent } from '../conversation-details/conversati
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { Conversation, Message } from '../../interfaces/chat';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-details',
-    imports: [ConversationDetailsComponent],
+    imports: [ConversationDetailsComponent, CommonModule],
     templateUrl: './details.component.html',
     styleUrl: './details.component.css'
 })
