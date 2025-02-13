@@ -65,6 +65,8 @@ export class ConversationDetailsComponent implements OnChanges, OnDestroy, OnIni
     // Appelez l'API pour récupérer les messages (par exemple, les 10 derniers)
     this.apiService.getConversationBetweenTwoUsers(conversationId).then((response) => {
       this.realtimeMessages = response.messages; // Assume that the response contains the 'messages' data
+      console.log('rel mess:', this.realtimeMessages);
+      
       this.scrollToBottom();
     });
   }
@@ -86,6 +88,8 @@ export class ConversationDetailsComponent implements OnChanges, OnDestroy, OnIni
       console.log('mess2', newMessage);
       // Envoie du message via WebSocket
       this.websocketService.sendMessage(newMessage);
+      console.log('new mess:', newMessage);
+      
     }
     this.newMessage.reset();
   }

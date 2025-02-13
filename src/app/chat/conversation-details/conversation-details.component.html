@@ -5,14 +5,14 @@
     <div 
       *ngFor="let message of realtimeMessages"
       [ngClass]="{
-        'ml-[20%] bg-blue-200': message.name === myUser?.email,
-        'bg-gray-200': message.name !== myUser?.email
+        'ml-[20%] bg-blue-200': message.created_by?.email=== myUser?.email,
+        'bg-gray-200': message.created_by?.email !== myUser?.email
       }"
       class="w-[80%] px-4 py-6 rounded-xl"
     >
       <!-- Affichage du nom ou de l'email de l'expéditeur -->
       <p class="font-bold text-gray-500">
-        {{ message.name || message.email }}
+        {{ message.created_by?.email || message.created_by?.email }}
       </p>
 
       <!-- Affichage du contenu du message avec les sauts de ligne préservés -->
