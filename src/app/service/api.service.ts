@@ -377,5 +377,28 @@ async getConversationBetweenTwoUsers(conversationId: string) {
   }
 }
 
+async getConversationWithLandlord(landlordId: string) {
+  const url = `${this.apiUrl}/api/chat/start/${landlordId}/`;
+  const options = { 
+      method: 'GET', 
+      headers: { 
+          Accept: 'application/json',
+          'Content-Type': 'application/json', 
+          Authorization: `Bearer ${this.accessToken}` // Ajout du token d'accès ici
+    } 
+  };
+
+  try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+          throw new Error(`Erreur API: ${response.statusText}`);
+      }
+      return await response.json();
+  } catch (error) {
+      console.error("Erreur API getConversationWithLandlord:", error);
+      return null;
+  }
+}
+
 
 }

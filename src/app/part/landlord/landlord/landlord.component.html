@@ -5,9 +5,23 @@
             <div class="flex flex-col items-center p-6 rounded-xl border border-gray-300 shadow-xl">
                 <img src="{{ landlord?.avatar_url }}" alt="Landlord name" width="200" height="200" class="rounded-full">
                 <h1 class="mt-6 text-2xl">{{ landlord?.email }}</h1>
-                <div class="mt-6 cursor-pointer py-4 px-6 bg-airbnb hover:bg-airbnb-dark transition text-white rounded-xl">
+                
+                <a 
+                    *ngIf="landlord && userId" 
+                    (click)="startConversation()"
+                    class="mt-6 cursor-pointer py-4 px-6 bg-airbnb hover:bg-airbnb-dark transition text-white rounded-xl"
+                >
                     Contact
-                </div>
+                </a>
+                
+                <a 
+                    *ngIf="!userId" 
+                    [routerLink]="['/login']" 
+                    class="mt-6 cursor-pointer py-4 px-6 bg-gray-500 hover:bg-gray-700 transition text-white rounded-xl"
+                    (click)="openLoginModal()"
+                >
+                    Se connecter
+                </a>
             </div>
         </aside>
         <!-- Section Main -->
