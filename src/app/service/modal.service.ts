@@ -7,20 +7,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ModalService {
 
-  private modalState = new BehaviorSubject<{ isOpen: boolean, content: Type<any> | null, label: string }>({
+  private modalState = new BehaviorSubject<{ isOpen: boolean, content: Type<any> | null, label: string, data?: any }>({
     isOpen: false,
     content: null,
     label: '',
+    data: null,
   });
 
   modalState$ = this.modalState.asObservable();
 
-  open(label: string, content: Type<any>) {
-    this.modalState.next({ isOpen: true, content, label });
+  open(label: string, content: Type<any>, data?: any) {
+    this.modalState.next({ isOpen: true, content, label, data });
   }
 
   close() {
-    this.modalState.next({ isOpen: false, content: null, label: '' });
+    this.modalState.next({ isOpen: false, content: null, label: '', data: null });
   }
 }
 

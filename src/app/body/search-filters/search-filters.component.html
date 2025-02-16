@@ -1,11 +1,11 @@
 <div
   class="h-[48px] lg:h-[64px] flex flex-row items-center justify-between border rounded-full relative"
-  (click)="openSearchModal()"
 >
   <div class="hidden lg:block">
     <div class="flex flex-row items-center justify-between">
       <div
         class="cursor-pointer h-[48px] lg:h-[64px] px-8 flex flex-col justify-center rounded-full hover:bg-gray-100"
+        (click)="openSearchModal('location')"
       >
         <p class="text-xs font-semibold">Where</p>
         <p class="text-xs">Wanted locations</p>
@@ -27,6 +27,7 @@
 
       <div
         class="cursor-pointer h-[48px] lg:h-[64px] px-8 flex flex-col justify-center rounded-full hover:bg-gray-100 pr-16"
+        (click)="openSearchModal('guests')"
       >
         <p class="text-xs font-semibold">Who</p>
         <p class="text-xs">Add guests</p>

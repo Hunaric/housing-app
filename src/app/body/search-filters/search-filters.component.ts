@@ -15,8 +15,8 @@ export class SearchFiltersComponent {
 
   constructor(private modalService: ModalService) {}
 
-  openSearchModal() {
-    this.modalService.open('Search', SearchModalComponent);
+  openSearchModal(step: string) {
+    this.modalService.open('Search', SearchModalComponent, {currentStep: step});
   }
 
 }
