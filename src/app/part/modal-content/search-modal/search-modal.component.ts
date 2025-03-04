@@ -101,6 +101,7 @@ export class SearchModalComponent implements OnInit{
         this.currentStep = state.data.currentStep;
       }
     })
+    
 
     // Abonnez-vous à la catégorie sélectionnée
     this.categoryService.selectedCategory$.subscribe(category => {

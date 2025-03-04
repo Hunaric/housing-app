@@ -79,6 +79,10 @@ export class SearchService {
   updateSearchQuery(query: SearchQuery) {
     this.searchQuerySubject.next(query);
   }
+
+  getCurrentQuery(): SearchQuery | null {
+    return this.searchQuerySubject.getValue();
+  }
 }
 
 @Injectable({

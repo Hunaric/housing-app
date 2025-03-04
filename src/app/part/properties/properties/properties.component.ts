@@ -29,6 +29,9 @@ export class PropertiesComponent implements OnChanges{
   constructor(private apiService: ApiService, private searchService: SearchService) {
     this.loadProperties();
 
+    // Démarrer l'intervalle pour le fetch des propriétés toutes les 10 secondes
+    this.startDataFetchInterval();
+
     // Abonnez-vous aux changements de la requête de recherche
     this.searchService.searchQuery$.subscribe(query => {
       if (query) {
@@ -59,7 +62,46 @@ export class PropertiesComponent implements OnChanges{
   }
 
 
+  ngOnDestroy(): void {
+    this.stopDataFetchInterval(); // Arrêter l'intervalle lorsque le composant est détruit
+  }
+
+
+  private intervalId: any; // ID de l'intervalle
+
+  startDataFetchInterval() {
+    this.intervalId = setInterval(() => {
+      this.loadProperties({
+        landlord_id: this.landlordId(),
+        category: this.selectedCategory || '' // Vous pouvez ajouter d'autres filtres si nécessaire
+      });
+    }, 10000); // 10000ms = 10 secondes
+  }
+
+  stopDataFetchInterval() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+      console.log('Data fetch interval stopped');
+    }
+  }
+
+
   loadProperties(filters: { landlord_id?: string, [key: string]: any } = {}) {
+    const currentQuery = this.searchService.getCurrentQuery();
+    // Ajoutez les paramètres de recherche actuels aux filtres
+    if (currentQuery) {
+      filters = {
+        ...filters,
+        country: currentQuery.country || '',
+        category: currentQuery.category || '',
+        checkIn: currentQuery.checkIn || '',
+        checkOut: currentQuery.checkOut || '',
+        numBedrooms: currentQuery.bedrooms || 0,
+        numGuests: currentQuery.guests || 0,
+        numBathrooms: currentQuery.bathrooms || 0,
+      };
+    }
     
     this.apiService.getAllHouses(filters)
       .then((properties: Properties) => {

@@ -52,7 +52,7 @@ export class SuccessMessageComponent {
 
           if (elapsedTime >= totalTime) {
             clearInterval(updateProgress); // Arrêter l'intervalle lorsque le temps est écoulé
-            window.location.reload();
+            // window.location.reload();
             this.modalService.close(); // Fermer le modal après 3 secondes
           }
         }, interval);
