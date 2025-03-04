@@ -6,7 +6,7 @@ export interface SearchQuery {
     bathrooms: number,
     bedrooms: number,
     category: string,      
-    last_login: string | null,
+    // last_login: string | null,
 }
 
 export interface Landlord {

@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CategoriesComponent } from '../categories/categories.component';
 import { PropertiesComponent } from '../properties/properties/properties.component';
 import { CommonModule } from '@angular/common';
+import { SearchModalComponent } from '../modal-content/search-modal/search-modal.component';
 
 @Component({
     selector: 'app-pages',

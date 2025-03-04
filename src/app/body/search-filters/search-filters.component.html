@@ -13,15 +13,9 @@
 
       <div
         class="cursor-pointer h-[48px] lg:h-[64px] px-8 flex flex-col justify-center rounded-full hover:bg-gray-100"
+        (click)="openSearchModal('checkin')"
       >
-        <p class="text-xs font-semibold">Check in</p>
-        <p class="text-xs">Add dates</p>
-      </div>
-
-      <div
-        class="cursor-pointer h-[48px] lg:h-[64px] px-8 flex flex-col justify-center rounded-full hover:bg-gray-100"
-      >
-        <p class="text-xs font-semibold">Check out</p>
+        <p class="text-xs font-semibold">Check in & check out</p>
         <p class="text-xs">Add dates</p>
       </div>
 
@@ -35,7 +29,7 @@
     </div>
   </div>
   <div class="p-2 right-0">
-    <div class="cursor-pointer p-2 lg:p-4 bg-airbnb hover:bg-airbnb-dark transition rounded-full text-white">
+    <div class="cursor-pointer p-2 lg:p-4 bg-airbnb hover:bg-airbnb-dark transition rounded-full text-white" (click)="openSearchModal('location')">
       <svg
         viewBox="0 0 32 32"
         style="

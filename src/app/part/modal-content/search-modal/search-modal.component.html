@@ -19,6 +19,18 @@
     
                 </select>
             </div>
+              
+            <!-- Select Commune -->
+            <div *ngIf="selectedDepartement" class="flex flex-col space-y-2 pb-6">
+                <label for="commune">Select a Commune</label>
+                <select (change)="onCommuneChange($event)" class="w-full p-4 border border-gray-600 rounded-xl">
+                    <option value="" [defaultSelected]="!isCommuneSelected" [ngClass]="{ 'hidden': isCommuneSelected }" disabled>Select</option>
+                    <option *ngFor="let commune of selectedDepartement?.communes" [value]="commune.id_commune">
+                        {{ commune.libelle_commune }}
+                    </option>
+                </select>
+            </div>
+    
                   
 
         </form>
@@ -29,11 +41,108 @@
             </div>
             <div class="w-full gap-4 flex flex-row">
                 <button class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl" (click)="changeStep('checkin')">Check dates</button>
-                <!-- <button type="submit" *ngIf="currentStep === 6" class="w-full h-[54px] bg-blue-600 text-white rounded-xl" (click)="submitForm()">Submit</button> -->
             </div>
         </div>
     </div>
 
-    <div *ngIf="currentStep === 'guest'">
+    <div *ngIf="currentStep === 'checkin'">
+        <form [formGroup]="startDateForm">
+            <div class="w-full flex flex-col justify-center items-center gap-8 py-3">
+                <div class="flex flex-col lg:flex-row items-center gap-8">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Date de début</mat-label>
+                      <input matInput [matDatepicker]="startPicker" (dateChange)="onStartDateSelected($event.value)" [min]="minDate" [max]="maxDate" [matDatepickerFilter]="filterDates" formControlName="startDate">
+                      <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                      <mat-datepicker #startPicker></mat-datepicker>
+                      <mat-hint>yyyy / MM / dd</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Date de fin</mat-label>
+                      <input matInput [matDatepicker]="endPicker" (dateChange)="onEndDateSelected($event.value)" [min]="minEndDate" [max]="maxEndDate" [matDatepickerFilter]="filterDates" formControlName="endDate">
+                      <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+                      <mat-datepicker #endPicker></mat-datepicker>
+                      <mat-hint>yyyy / MM / dd</mat-hint>
+                    </mat-form-field>
+                </div>
+                <p class="flex flex-col lg:flex-row lg:gap-8 justify-between">
+                <span>
+                    <strong>Start Date</strong>: {{ campaignOne.get('start')?.value | date: 'yyyy/MM/dd' }}
+                </span> <br>
+                <span>
+                    <strong>End Date</strong>: {{ campaignOne.get('end')?.value | date: 'yyyy/MM/dd' }}
+                </span>
+                </p>
+            
+                <div *ngIf="campaignOne.hasError('invalidDateRange')" class="error-message">
+                La date de fin doit être postérieure à la date de début.
+                </div>
+                
+                <div *ngIf="campaignOne.errors?.['invalidDateRange']">
+                <p class="error-text">La date de fin doit être postérieure à la date de début.</p>
+                </div>
+            </div>
+        </form>
 
+        <div class="flex flex-col gap-3">
+            <div *ngFor="let error of errors; let i = index" class="p-5 bg-airbnb text-white rounded-xl opacity-80">
+                {{ error }}
+            </div>
+            <div class="w-full gap-4 flex flex-col lg:flex-row">
+                <button class="w-full h-[54px] bg-black text-white rounded-xl" (click)="changeStep('location')">Add location</button>
+                <button class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl" (click)="changeStep('guests')">Add guests</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="currentStep === 'guests'">
+        <form [formGroup]="detailsForm">
+
+        <div class="pt-3 pb-6 space-y-4">
+            <div class="flex flex-col space-y-2">
+                <label for="bedrooms">Bedrooms</label>
+                <input 
+                    type="number"
+                    formControlName="bedrooms"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': detailsForm.get('bedrooms')?.invalid && detailsForm.get('bedrooms')?.touched}"
+                    [min]="1"
+                    [placeholder]="'Enter the number of the bedrooms'"
+                />
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="bathrooms">Bathrooms</label>
+                <input 
+                    type="number"
+                    formControlName="bathrooms"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': detailsForm.get('bathrooms')?.invalid && detailsForm.get('bathrooms')?.touched}"
+                    [min]="1"
+                    placeholder="Enter the number of the bathrooms"
+                />
+            </div>
+
+            <div class="flex flex-col space-y-2">
+                <label for="guests">Maximum number of guests</label>
+                <input 
+                    type="number"
+                    formControlName="guests"
+                    class="w-full p-4 border border-gray-600 rounded-xl"
+                    [ngClass]="{'border-red-500': detailsForm.get('guests')?.invalid && detailsForm.get('guests')?.touched}"
+                    [min]="1"
+                    placeholder="Enter the number of the guests"
+                />
+            </div>
+        </div>
+    </form>
+
+        <div class="flex flex-col gap-3">
+            <div *ngFor="let error of errors; let i = index" class="p-5 bg-airbnb text-white rounded-xl opacity-80">
+                {{ error }}
+            </div>
+            <div class="w-full gap-4 flex flex-col lg:flex-row">
+                <button class="w-full h-[54px] bg-black text-white rounded-xl" (click)="changeStep('checkin')">Add checkin</button>
+                <button class="w-full h-[54px] bg-airbnb-dark text-white rounded-xl" (click)="endSearch()">Validate</button>
+            </div>
+        </div>
     </div>

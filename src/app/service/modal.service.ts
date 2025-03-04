@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Signal, signal, Type } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { SearchQuery } from '../interfaces/search';
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +65,30 @@ export class SuccessMessageService {
 
   showSuccessMessage(message: string) {
     this.successMessageSubject.next(message);
+  }
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SearchService {
+  private searchQuerySubject = new BehaviorSubject<SearchQuery | null>(null);
+  searchQuery$ = this.searchQuerySubject.asObservable();
+
+  updateSearchQuery(query: SearchQuery) {
+    this.searchQuerySubject.next(query);
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CategorySearchService {
+  private selectedCategorySubject = new BehaviorSubject<string | null>(null);
+  selectedCategory$ = this.selectedCategorySubject.asObservable();
+
+  setSelectedCategory(category: string | null) {
+    this.selectedCategorySubject.next(category);
   }
 }
