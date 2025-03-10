@@ -92,6 +92,9 @@ export class LoginModalComponent {
         localStorage.setItem('tokenRefresh', res.refresh);
         localStorage.setItem('userId', res.user.pk);
         this.modalService.close(); // Close the modal
+
+      // Démarrer le rafraîchissement automatique du token
+      this.startTokenRefreshInterval();
         window.location.reload();
         // this.router.navigate(['/']); // Redirect to home
       } catch(error) {
@@ -100,4 +103,17 @@ export class LoginModalComponent {
       }
     } 
   }
+
+startTokenRefreshInterval() {
+  setInterval(async () => {
+    try {
+      const newTokens = await this.apiService.refreshToken();
+      localStorage.setItem('tokenAccess', newTokens.access);
+      localStorage.setItem('tokenRefresh', newTokens.refresh);
+    } catch (error) {
+      console.error('Failed to refresh token:', error);
+      // Rediriger vers la page de connexion ou gérer l'erreur
+    }
+  }, 15 * 60 * 1000); // Rafraîchir le token toutes les 15 minutes
+}
 }

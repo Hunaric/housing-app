@@ -3,6 +3,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './body/navbar/navbar.component';
 import { PagesComponent } from './part/pages/pages.component';
 import { ModalComponent } from './part/modal/modal.component';
+import { ApiService } from './service/api.service';
 
 
 @Component({
@@ -13,4 +14,5 @@ import { ModalComponent } from './part/modal/modal.component';
 })
 export class AppComponent {
   title = 'housing';
+
 }

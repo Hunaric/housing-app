@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../service/api.service';
 import { Properties, Property } from '../../../interfaces/properties';
 import { SearchService } from '../../../service/modal.service';
+import { Router } from '@angular/router';
 type PropertyWithFavorite = Property & { isFavorited: boolean};
 
 @Component({
@@ -26,7 +27,7 @@ export class PropertiesComponent implements OnChanges{
   // @Input() landlordId?: string;
   landlordId = input<string>();
 
-  constructor(private apiService: ApiService, private searchService: SearchService) {
+  constructor(private apiService: ApiService, private searchService: SearchService, private router: Router) {
     this.loadProperties();
 
     // Démarrer l'intervalle pour le fetch des propriétés toutes les 10 secondes
@@ -87,7 +88,28 @@ export class PropertiesComponent implements OnChanges{
   }
 
 
-  loadProperties(filters: { landlord_id?: string, [key: string]: any } = {}) {
+  async loadProperties(filters: { landlord_id?: string, [key: string]: any } = {}) {
+
+    console.log('token 1', localStorage.getItem('tokenAccess'));
+    console.log('token 2', localStorage.getItem('tokenRefresh'));
+    console.log(localStorage.getItem('userId'));
+    const accessToken = localStorage.getItem('tokenAccess');
+
+
+  // Vérifier si le token est null ou expiré
+  if (!accessToken || this.isTokenExpired(accessToken)) {
+    try {
+      const newTokens = await this.apiService.refreshToken();
+      localStorage.setItem('tokenAccess', newTokens.access);
+      localStorage.setItem('tokenRefresh', newTokens.refresh);
+    } catch (error) {
+      console.error('Failed to refresh token:', error);
+      // Rediriger vers la page de connexion si le rafraîchissement échoue
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
+
     const currentQuery = this.searchService.getCurrentQuery();
     // Ajoutez les paramètres de recherche actuels aux filtres
     if (currentQuery) {
@@ -118,6 +140,18 @@ export class PropertiesComponent implements OnChanges{
       });
   }
   
+  isTokenExpired(token: string): boolean {
+    if (!token) return true;
+  
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Décoder le payload du token
+      const expiration = payload.exp * 1000; // Convertir en millisecondes
+      return Date.now() >= expiration;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return true; // En cas d'erreur, considérer le token comme expiré
+    }
+  }
 
 
 }

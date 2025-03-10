@@ -41,6 +41,30 @@ export class ApiService {
     }
   }
 
+  async refreshToken(): Promise<any> {
+    const url = `${this.apiUrl}/api/auth/token/refresh/`;
+    const refreshToken = localStorage.getItem('tokenRefresh');
+  
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({ refresh: refreshToken }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    };
+  
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      console.log('Refresh token response:', data); // Ajoutez ceci pour voir la réponse
+      return data;
+    } catch (error) {
+      console.error('Error refreshing token:', error);
+      throw error;
+    }
+  }
+
   async onLogedIn(email: string, password: string): Promise<any> {
     const url = `${this.apiUrl}/api/auth/login/`;
     const options = {
