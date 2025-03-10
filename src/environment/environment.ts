@@ -1,5 +1,6 @@
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:8000',
-    WS_HOST: 'ws://localhost:8000'
+    production: true,
+    apiUrl: 'https://housing-app-backend.onrender.com',
+    // apiUrl: 'http://localhost:8000',
+    WS_HOST: 'ws://housing-app-backend.onrender.com'
 }
