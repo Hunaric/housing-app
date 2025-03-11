@@ -22,9 +22,9 @@ export class ItemsComponent {
     console.log(this.id);
     
     // Correction de l'URL de l'image
-    if (this.image_url) {
-      this.image_url = this.image_url.replace(/\/\//g, '/'); // Remplacer les doubles slashes
-    }
+    // if (this.image_url) {
+    //   this.image_url = this.image_url.replace(/\/\//g, '/'); // Remplacer les doubles slashes
+    // }
   }
 
 
